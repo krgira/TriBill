@@ -8,6 +8,8 @@ import CurrencyScreen from './CurrencyScreen';
 import MapScreen from './MapScreen';
 import SettingScreen from './SettingScreen';
 
+import SetScheduleScreen from './SetScheduleScreen';
+
 const Tab = createBottomTabNavigator();
 
 function MainTab() {
