@@ -1,12 +1,9 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import CalendarView from '../components/CalendarView';
 
 function MapScreen() {
-  return <View sytle={styles.block} />;
+  return <CalendarView />;
 }
 
-const styles = StyleSheet.create({
-  block: {},
-});
 
 export default MapScreen;

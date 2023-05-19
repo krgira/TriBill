@@ -13,6 +13,7 @@ import SetScheduleScreen from './SetScheduleScreen';
 const Tab = createBottomTabNavigator();
 
 function MainTab() {
+
   return (
     <Tab.Navigator
       screenOptions={{
