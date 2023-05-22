@@ -68,7 +68,7 @@ const renderFilledDates = () => {
 };
 
 const setSchedule = () => {
-  fetch('http://172.20.10.2:8080/test/calendar', {
+  fetch('http://192.168.0.2:8080/test/calendar', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
