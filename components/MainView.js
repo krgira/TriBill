@@ -5,11 +5,14 @@ import {
   StyleSheet, 
   ScrollView, 
   TouchableOpacity,
+  Button,
    } from 'react-native';
 import { CalendarList } from 'react-native-calendars';
-import { AntDesign } from '@expo/vector-icons';
+import { NavigationContainer } from '@react-navigation/native';
 
-function MainView() {
+function MainView({navigation}) {
+
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.lists}>
@@ -19,6 +22,10 @@ function MainView() {
           style={styles.calendars}
         />
       </ScrollView>
+      <Button 
+        title="go to Detail" 
+        onPress={() => navigation.navigate('Details')}
+      />
     </View>
   );
 }

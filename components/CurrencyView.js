@@ -35,12 +35,12 @@ const formatCurrency = (value) => {
   const [usdAmount, setUsdAmount] = useState(0);
   const [exchangeRate, setExchangeRate] = useState(0);
 
-  useEffect(() => {
+  /*useEffect(() => {
     fetchExchangeRate();
   }, []);
 
   const fetchExchangeRate = () => {
-    fetch('/api/exchange-rate', { method: 'POST' })
+    fetch('/api/exchange-rate/', { method: 'POST' })
       .then(response => response.json())
       .then(data => {
         setExchangeRate(data.exchange_rate);
@@ -49,7 +49,7 @@ const formatCurrency = (value) => {
       .catch(error => {
         console.error('Error fetching exchange rate:', error);
       });
-  };
+  };*/
 
   const [activeButton, setActiveButton] = useState('krw');
 

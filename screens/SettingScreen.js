@@ -1,8 +1,9 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import NationListView from '../components/NationListView';
 
 function SettingScreen() {
-  return <View sytle={styles.block} />;
+  return <NationListView sytle={styles.block} />;
 }
 
 const styles = StyleSheet.create({

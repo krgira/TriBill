@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons'; 
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 import MainScreen from './MainScreen';
 import CurrencyScreen from './CurrencyScreen';
@@ -9,6 +9,7 @@ import MapScreen from './MapScreen';
 import SettingScreen from './SettingScreen';
 
 import SetScheduleScreen from './SetScheduleScreen';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -28,12 +29,12 @@ function MainTab() {
             <Ionicons name="calendar-sharp" size={size} color={color} />
           ),
           headerLeft: ({onPress}) => (
-            <TouchableOpacity onPress={onPress}>
+            <TouchableOpacity onPress={onPress} style={styles.headerIcon}>
               <Ionicons name="menu" size={24} color="black" />
             </TouchableOpacity>
           ),
           headerRight: () => (
-            <TouchableOpacity>
+            <TouchableOpacity style={styles.headerIcon}>
               <Text>Edit</Text>
             </TouchableOpacity>
           ),
@@ -69,5 +70,12 @@ function MainTab() {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  headerIcon: {
+    paddingHorizonal: 15,
+  },
+
+});
 
 export default MainTab;

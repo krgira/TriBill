@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   countryEmoji: {
-    fontFamily: 'Inter',
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 24,
@@ -45,7 +44,6 @@ const styles = StyleSheet.create({
   },
   countryName: {
     flex: 1,
-    fontFamily: 'Inter',
     fontWeight: '700',
     fontSize: 16,
     marginLeft: 8,
@@ -69,7 +67,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const NationList = () => {
+const NationListView = () => {
   const [favoriteCountries, setFavoriteCountries] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const countries = [
@@ -320,4 +318,4 @@ const renderCountry = ({ item, index }) => {
   );
 };
 
-export default NationList;
+export default NationListView;
