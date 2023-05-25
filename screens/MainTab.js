@@ -71,7 +71,7 @@ function MainTab() {
 
 const styles = StyleSheet.create({
   headerIcon: {
-    paddingHorizonal: 15,
+    paddingHorizonal: 25,
   },
 
 });

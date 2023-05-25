@@ -6,7 +6,7 @@ function MainDetailScreen() {
         <View>
             <Text>main detail</Text>
         </View>
-    )
-};
+    );
+}
 
 export default MainDetailScreen;

@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 function FloatingWriteButton() {
     const navigation = useNavigation();
     const onPress = () => {
-        navigation.navigate('MainDetail');
+        navigation.navigate("MainDetail");
     };
 
     return (
@@ -19,7 +19,6 @@ function FloatingWriteButton() {
             ]}
             android_ripple={{color: 'white'}}
             onpress={onPress}>
-                <Ionicons name="add" size={24} color="white" />
             </Pressable>
         </View>
     )
