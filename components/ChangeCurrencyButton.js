@@ -1,23 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { LineChart } from "react-native-chart-kit";
+import { View, Text, TouchableOpacity, StyleSheet,  } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const screenWidth = Dimensions.get("window").width;
 
-function CurrencyView() {
-  const data = {
-    labels: ["January", "February", "March", "April", "May", "June"],
-    datasets: [
-      {
-        data: [20, 45, 28, 80, 99, 43],
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-        strokeWidth: 2
-      }
-    ],
-    legend: ["Rainy Days"]
-  };
 
+function ChangeCurrencyButton() {
+  
 const formatCurrency = (value) => {
   if (value > 0) {
     if (value % 1 !== 0) {
@@ -29,7 +17,6 @@ const formatCurrency = (value) => {
     return value.toFixed(6);
   }
 };
-
 
   const [krwAmount, setKrwAmount] = useState(1);
   const [usdAmount, setUsdAmount] = useState(0);
@@ -97,27 +84,6 @@ const formatCurrency = (value) => {
 
   return (
     <View style={styles.container}>
-      <LineChart
-        data={data}
-        width={screenWidth}
-        height={220}
-        chartConfig={{
-          backgroundGradientFrom: "white",
-          backgroundGradientTo: "white",
-          decimalPlaces: 2,
-          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          style: {
-            borderRadius: 16
-          },
-          propsForDots: {
-            r: "6",
-            strokeWidth: "2",
-            stroke: "pink"
-          }
-        }}
-      />
-
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
           style={[
@@ -210,4 +176,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CurrencyView;
+export default ChangeCurrencyButton;

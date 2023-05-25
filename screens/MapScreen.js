@@ -1,9 +1,9 @@
 import React from 'react';
-import CalendarView from '../components/CalendarView';
+import { View } from 'react-native';
 
 function MapScreen() {
-  return <CalendarView />;
-}
+  return <View></View>
+};
 
 
 export default MapScreen;

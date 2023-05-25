@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import MainTab from './screens/MainTab';
+import RootStack from './screens/RootStack';
 
 
 const App = () => {
   return (
     <NavigationContainer>
-      <MainTab />
+      <RootStack />
     </NavigationContainer>
   );
 };

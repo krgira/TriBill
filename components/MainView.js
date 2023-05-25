@@ -9,6 +9,7 @@ import {
    } from 'react-native';
 import { CalendarList } from 'react-native-calendars';
 import { NavigationContainer } from '@react-navigation/native';
+import FloatingWriteButton from './FloatingWriteButton';
 
 function MainView({navigation}) {
 
@@ -22,10 +23,7 @@ function MainView({navigation}) {
           style={styles.calendars}
         />
       </ScrollView>
-      <Button 
-        title="go to Detail" 
-        onPress={() => navigation.navigate('Details')}
-      />
+      <FloatingWriteButton />
     </View>
   );
 }
