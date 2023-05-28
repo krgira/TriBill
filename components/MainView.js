@@ -23,7 +23,10 @@ function MainView({navigation}) {
           style={styles.calendars}
         />
       </ScrollView>
-      <FloatingWriteButton />
+      <View>
+        <FloatingWriteButton />
+      </View>
+      
     </View>
   );
 }
