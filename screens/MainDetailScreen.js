@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { 
   Platform,
+  fetch,
   Image,
   Text, 
   View,
@@ -15,9 +16,74 @@ import SelectDropdown from 'react-native-select-dropdown'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios';
+
+//type memberNcurrency = {
+//  members: [],
+
+//}
+const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NTM1NTU2MSwiZW1haWwiOiJjZWUyN2IxYS1jZmY2LTRhYjEtYTIyZS03ZTMyZTRmYzQ4MTlAc29jaWFsVXNlci5jb20ifQ.BP17dgYXPILyS7kG129zdi38ISFfeYeKLegQOkw09BVdLEGIoNcPOTFzUISTq7n1nCiryKRc9WF28ZWdwE5K4Q";
+async function fetchData() {
+  try {
+    const response = await axios.get('http://172.30.1.16:8080/api/budget/trip/4/show', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    console.log(response);
+
+    if (response.status === 200) {
+      const data = response.data;
+      const members = data.member;
+      const exchangeRate = data.exchangeRate;
+
+      // Process the retrieved data
+      console.log(data);
+    } else {
+      // Handle error responses
+      console.log('Error(response-not okay):', response.data);
+    }
+  } catch (error) {
+    // Handle network errors
+    console.log('Error(fetchdata error):', error);
+  }
+};
+
+/*
+async function fetchData() {
+  try {
+    const response = await fetch('http://172.30.1.16:5000/api/budget/trip/4/show', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        //'Authorization': `Bearer ${token}`,
+      },
+    });
+    console.log(response)
+    if (response.ok) {
+      const data = await response.json();
+      const members = data.member;
+      const exchangeRate = data.exchangeRate;
+      // Process the retrieved data
+      console.log(data);
+    } else {
+      // Handle error responses
+      const errorData = await response.json();
+      console.log('Error(response-not okay):', errorData);
+    }
+  } catch (error) {
+    // Handle network errors
+    console.log('Error(fetchdata error):', error);
+  }
+};
+*/
 
 
 export default function App() {
+
+  fetchData();
   const [text, onChangeText] = useState('');
   const [number, onChangeNumber] = useState();
   const [category, setCategory] = useState('');
@@ -121,6 +187,31 @@ export default function App() {
       setImage(result.assets[0].uri);
     }
   };
+/*
+  const setSchedule = () => {
+    fetch('http://172.30.1.16:8080/test/calendar', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        console.log("start date:", data.startDate);
+        console.log("end date:", data.endDate);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    console.log("fetch end");
+  };
+*/
+
 
 
   return (
