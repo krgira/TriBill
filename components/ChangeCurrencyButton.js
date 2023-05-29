@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const screenWidth = Dimensions.get("window").width;
 
-function CurrencyView() {
+function ChangeCurrencyButton() {
   const formatCurrency = (value) => {
     if (typeof value !== 'number') {
       value = parseFloat(value);
@@ -249,4 +249,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CurrencyView;
+export default ChangeCurrencyButton;

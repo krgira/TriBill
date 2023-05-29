@@ -15,6 +15,7 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.capstone.TriBill",
       "supportsTablet": true
     },
     "android": {
