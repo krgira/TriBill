@@ -17,7 +17,8 @@ function RootStack() {
       <Stack.Screen 
         name="MainDetail" 
         component={MainDetailScreen}
-        options={{headerShown: false}} />
+        //options={{headerShown: false}} 
+        />
     </Stack.Navigator>
   );
 }

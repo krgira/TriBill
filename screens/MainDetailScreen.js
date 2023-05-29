@@ -226,17 +226,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#fffff',
-    padding: 8,
+    backgroundColor: 'white',
   },
   dateContainer: {
-    flex: 0.3
+    flex: 0.5
   },
   dateText:{
     fontSize: 20,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    fontFamily: 'inter',
     fontWeight: 'bold',
   },
   currencyButton: {
@@ -257,7 +255,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     fontWeight: "bold",
-    fontFamily: 'inter',
   },
   categoryButton: {
     paddingHorizontal: 10,
@@ -326,7 +323,6 @@ const styles = StyleSheet.create({
     paddingHorizontal : 15,
     paddingVertical: 10,
     paddingTop: 5,
-    fontFamily: 'inter',
     fontSize: 15,
     fontWeight: "bold",
   },

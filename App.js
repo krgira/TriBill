@@ -9,9 +9,7 @@ import { LogContextProvider } from './contexts/LogContext';
 const App = () => {
   return (
     <NavigationContainer>
-      <LogContextProvider>
         <RootStack />
-      </LogContextProvider>
     </NavigationContainer>
   );
 };
