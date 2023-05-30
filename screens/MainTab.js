@@ -7,6 +7,7 @@ import MainScreen from './MainScreen';
 import CurrencyScreen from './CurrencyScreen';
 import MapScreen from './MapScreen';
 import SettingScreen from './SettingScreen';
+import MainListScreen from './MainListScreen';
 
 
 const Tab = createBottomTabNavigator();

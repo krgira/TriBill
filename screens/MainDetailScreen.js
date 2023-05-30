@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { 
   Platform,
-  fetch,
+  ScrollView,
   Image,
   Text, 
   View,
@@ -13,7 +13,6 @@ import {
    } from 'react-native';
 import Constants from 'expo-constants';
 import SelectDropdown from 'react-native-select-dropdown'
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
@@ -219,6 +218,7 @@ export default function App() {
       <View style={styles.dateContainer}>
         <Text style={styles.dateText}>6월 26일</Text>
       </View>
+      <ScrollView>
       <SelectDropdown
           data={currencyTypes}
           onSelect={(selectedItem, index) => {
@@ -303,7 +303,7 @@ export default function App() {
           {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
         </View>
       </View>
-
+      </ScrollView>
     <TouchableOpacity style={styles.endContainer}>
       <Text style={styles.endText}>등록하기</Text>
     </TouchableOpacity>
@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
 
   },
   endContainer:{
-    flex: 0.2,
+    flex: 0.5,
     paddingVertical: 15,
     paddingHorizontal: 10,
     backgroundColor: "#4974A5",
