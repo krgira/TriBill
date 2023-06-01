@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, FlatList } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, FlatList, Modal,TouchableWithoutFeedback, Keyboard,KeyboardAvoidingView  } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Ionicons } from '@expo/vector-icons';
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -33,6 +34,11 @@ function ChangeCurrencyButton() {
   const [selectedCurrency, setSelectedCurrency] = useState('');
   const [isListExpanded, setListExpanded] = useState(false);
   const [currencyList, setCurrencyList] = useState([]);
+  const [isModalVisible, setModalVisible] = useState(false);
+const [budget, setBudget] = React.useState('');
+const [buttonContainerStyle, setButtonContainerStyle] = useState(styles.buttonContainer);
+const [amount, setAmount] = useState('');
+
 
   useEffect(() => {
     fetchExchangeRate();
@@ -40,7 +46,10 @@ function ChangeCurrencyButton() {
 
   const fetchExchangeRate = () => {
     fetch('/api/exchange-rate', { method: 'GET' })
-      .then(response => response.json())
+       .then(response => {
+      console.log(response); // response 객체를 콘솔에 출력합니다.
+      return response.json(); // 다음 then 메서드로 response를 전달합니다.
+    })
       .then(data => {
         const currencyKeys = Object.keys(data);
         setExchangeRate(data);
@@ -51,6 +60,7 @@ function ChangeCurrencyButton() {
         console.error('환율을 가져오는 중 오류 발생:', error);
       });
   };
+  
 
   const handleButtonPress = (buttonName) => {
     if (buttonName === 'krw') {
@@ -107,6 +117,73 @@ function ChangeCurrencyButton() {
     }
   };
 
+  const handleIconPress = () => {
+    
+    setModalVisible(true);
+
+  };
+  const closeModal = () => {
+  setModalVisible(false);
+};
+
+
+const handleTextInputFocus = () => {
+    inputRef.current.focus();
+  };
+    const handleTextChange = (value) => {
+    const numericValue = value.replace(/[^0-9]/g, '');
+    setBudget(numericValue);
+  };
+
+  const handleContainerPress = () => {
+    Keyboard.dismiss();
+  };
+
+  const handleAddButtonPress = () => {
+    const formattedAmount = parseFloat(amount);
+    const data = {
+    currency: selectedCurrency,
+    amount: formattedAmount
+  };
+   fetch('/api/save-amount', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => response.json())
+    .then(responseData => {
+     
+      console.log('서버 응답:', responseData);
+    })
+    .catch(error => {
+      console.error('서버 요청 오류:', error);
+    });
+  };
+  
+  
+
+    React.useEffect(() => {
+    Keyboard.addListener('keyboardWillShow', handleKeyboardWillShow);
+    Keyboard.addListener('keyboardWillHide', handleKeyboardWillHide);
+
+    return () => {
+      Keyboard.removeListener('keyboardWillShow', handleKeyboardWillShow);
+      Keyboard.removeListener('keyboardWillHide', handleKeyboardWillHide);
+    };
+  }, []);
+const handleKeyboardWillShow = () => {
+  setButtonContainerStyle({...styles.buttonContainer, top: 150});
+};
+
+const handleKeyboardWillHide = () => {
+  setButtonContainerStyle(styles.buttonContainer);
+};
+
+
+ const inputRef = React.useRef(null);
+
   return (
     <View style={styles.container}>
       <View style={styles.buttonsContainer}>
@@ -119,16 +196,15 @@ function ChangeCurrencyButton() {
           onPress={() => handleButtonPress('krw')}
         >
           <Text style={styles.buttonText}>KRW</Text>
-          <Text style={styles.buttonAmount}>₩{formatCurrency(krwAmount)}</Text>
+          <Text style={styles.buttonAmount}>{formatCurrency(krwAmount)}</Text>
         </TouchableOpacity>
+        
 
-        <View style={[styles.sortIcon, { top: 25, left: 182 }]}>
-          <Icon name="arrow-back" size={24} color="#333333" />
-        </View>
 
-        <View style={[styles.sortIcon, { bottom: 27, right: 185 }]}>
-          <Icon name="arrow-forward" size={24} color="#333333" />
-        </View>
+
+        <View style={[styles.sortIcon, { top: 20, left: 182 }]}>
+  <Icon name="ios-swap-horizontal" size={24} color="#333333" />
+</View>
 
         <TouchableOpacity
           style={[
@@ -146,8 +222,67 @@ function ChangeCurrencyButton() {
           <Text style={[styles.buttonText, styles.auxiliaryButtonText]}>
             {selectedCurrency !== '' ? selectedCurrency : 'USD'}
           </Text>
-          <Text style={styles.buttonAmount}>${formatCurrency(usdAmount)}</Text>
+          <Text style={styles.buttonAmount}>{formatCurrency(usdAmount)}</Text>
         </TouchableOpacity>
+        
+
+        <View style={[styles.sortIcon, { position: 'absolute', bottom: 20, right: 20 }]}>
+        <View style={styles.bellButtonContainer}>
+                <View style={[styles.sortIcon, { position: 'absolute', bottom: 20, right: 20 }]}>
+  <TouchableOpacity onPress={handleIconPress} style={styles.bellButton}>
+    <Ionicons name="md-notifications" size={24} color="#4974A5" />
+  </TouchableOpacity>
+</View> 
+</View>
+ <View>
+      <TouchableOpacity onPress={handleIconPress}>
+      </TouchableOpacity>
+    <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles.modalContainer}
+        onPress={closeModal}
+      >
+      <TouchableWithoutFeedback>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>알림 받을 환율을 설정하십시오</Text>
+<Text style={styles.modalSecondText}>설정한 환율 이하로 내려갈 경우
+알림을 보내드려요 </Text>
+
+<KeyboardAvoidingView style={styles.container} behavior="padding">
+          <View style={styles.popupBox}>
+          <TextInput
+            ref={inputRef}
+            style={styles.input}
+            placeholder="환율을 입력해주세요"
+            keyboardType="numeric"
+            onFocus={handleTextInputFocus}
+           onChangeText={setAmount}
+             value={amount}
+          />
+          
+          </View>
+          </KeyboardAvoidingView>
+          
+          <View style={styles.boxContainer}>
+          <TouchableOpacity style={styles.leftbox} onPress={closeModal}>
+           <Text style={styles.leftboxText}>취소</Text>
+           </TouchableOpacity>
+           <TouchableOpacity style={styles.rightbox} onPress={() => {
+  handleAddButtonPress();
+  closeModal();
+}}>
+           <Text style={styles.rightboxText}>설정</Text>
+           </TouchableOpacity>
+          </View>
+        </View>
+ </TouchableWithoutFeedback>
+      </TouchableOpacity>
+      </Modal>
+    </View>
+
+
+        </View>
 
         {showCurrencyList && (
           <FlatList
@@ -160,6 +295,7 @@ function ChangeCurrencyButton() {
         )}
       </View>
     </View>
+
   );
 }
 
@@ -218,6 +354,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
+    
   },
   centerButton: {
     marginRight: 5,
@@ -247,6 +384,143 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333333',
   },
+  bellButtonContainer: {
+    position: 'absolute',
+   top: 10,
+  alignSelf: 'flex-end',
+  },
+  bellButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#99B7DB',
+    
+  },
+   modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+      width: 300,
+      height: 250,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 16,
+      backgroundColor: '#FFFFFF',
+    },
+    modalText: {
+    fontFamily: 'Inter',
+    fontSize: 16,
+    fontWeight: '900',
+    lineHeight: 19,
+    letterSpacing: 0.005,
+    textAlign: 'center',
+    top: 30,
+    },
+ popupBox: {
+   top: 65,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 12,
+    paddingHorizontal: 16,
+    marginVertical: 8,
+    width: 250,
+    height: 43,
+    borderWidth: 1.5,
+    borderColor: '#4974A5',
+    borderRadius: 9,
+    position: 'absolute',
+    left: '-41%', // 수평 가운데 정렬을 위해 추가
+},
+modalSecondText: {
+    top:50,
+    fontFamily: 'Inter',
+    fontSize: 13,
+    fontWeight: '400',
+    lineHeight: 16,
+    letterSpacing: 0.01,
+    textAlign: 'center',
+    color: '#71727A',
+  },
+  boxContainer:{
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  leftbox: {
+    width: 118,
+    height: 40,
+    padding: 12,
+    paddingLeft: 16,
+    paddingRight: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    borderColor: '#4974A5',
+    borderWidth: 1.5,
+    borderRadius: 9,
+    marginRight: 15,
+    marginLeft: 5,
+    justifyContent: 'center',
+   
+  },
+  rightbox: {
+    width: 118,
+    height: 40,
+    padding: 12,
+    paddingLeft: 16,
+    paddingRight: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#4974A5',
+    borderRadius: 9,
+    justifyContent: 'center',
+  },
+    leftboxText: {
+    width: 23,
+    height: 15,
+    fontFamily: 'Inter',
+    fontWeight: 'bold',
+    fontSize: 14,
+    lineHeight: 15,
+    color: '#4974A5',
+    flex: 0,
+    order: 1,
+    flexGrow: 0,
+    
+  },
+  rightboxText: {
+    width: 23,
+    height: 15,
+    fontFamily: 'Inter',
+    fontWeight: 'bold',
+    fontSize: 14,
+    lineHeight: 15,
+    color: '#FFFFFF',
+    flex: 0,
+    order: 1,
+    flexGrow: 0,
+  },
+   input: {
+    flex: 1,
+    fontFamily: 'Inter',
+    fontSize: 16,
+    fontWeight: '900',
+    lineHeight: 21,
+    letterSpacing: 0.005,
+    textAlign: 'left',
+  },
+  
 });
 
 export default ChangeCurrencyButton;
