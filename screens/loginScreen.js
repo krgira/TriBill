@@ -7,8 +7,6 @@ import axios from 'axios';
 WebBrowser.maybeCompleteAuthSession();
 
 export default function loginScreen() {
-  const [token, setToken] = useState('');
-  const [userInfo, setUserInfo] = useState(null);
 
 
   const handleGoogleButtonPress = async () => {
@@ -20,16 +18,11 @@ export default function loginScreen() {
 
   const getUserInfo = async () => {
     try {
-      const response = await axios.get('https://www.googleapis.com/userinfo/v2/me', 
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-  
-      const user = response.data;
-      setUserInfo(user);
-      console.log('User Info:', user); 
+      await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/login/oauth2/code/oauth2/tok'
+      );
+      console.log('success'); 
     } catch (error) {
-      console.log('Error:', error);
+      console.log('error');
     }
   };
 
@@ -44,8 +37,17 @@ export default function loginScreen() {
       <TouchableOpacity style={styles.googleButton} onPress={handleGoogleButtonPress}>
         <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
       </TouchableOpacity>
-      <WebView source={{ uri: 'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google' }} style={{ marginTop: 10 }} />
-
+      <WebView
+  source={{ uri: 'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google' }}
+  style={{ marginTop: 10 }}
+  ref={(ref) => { webviewRef = ref; }}
+  onNavigationStateChange={(navState) => {
+    webviewRef.canGoBack = navState.canGoBack;
+    if (navState.url.includes('/oauth2/sign-up')) {
+      getUserInfo();
+    }
+  }}
+/>
     </View>
   );
 }
