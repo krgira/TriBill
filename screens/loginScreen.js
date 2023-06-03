@@ -8,19 +8,19 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function loginScreen() {
 
-
   const handleGoogleButtonPress = async () => {
     console.log('Google Button Pressed');
     await WebBrowser.openBrowserAsync(
-      'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google'
+      'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/login'
     );
   };
 
   const getUserInfo = async () => {
     try {
+      console.log('success'); 
       await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/login/oauth2/code/oauth2/tok'
       );
-      console.log('success'); 
+      
     } catch (error) {
       console.log('error');
     }
@@ -38,14 +38,15 @@ export default function loginScreen() {
         <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
       </TouchableOpacity>
       <WebView
-  source={{ uri: 'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google' }}
+  source={{ uri: 'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/login' }}
   style={{ marginTop: 10 }}
   ref={(ref) => { webviewRef = ref; }}
   onNavigationStateChange={(navState) => {
     webviewRef.canGoBack = navState.canGoBack;
-    if (navState.url.includes('/oauth2/sign-up')) {
-      getUserInfo();
-    }
+    console.log('hi'); 
+    if (window.location.href.includes('/oauth2/sign-up')) {
+      console.log("testing");
+        }
   }}
 />
     </View>
