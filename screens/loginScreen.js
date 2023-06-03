@@ -1,36 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Image, PixelRatio } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image, PixelRatio, Button, } from 'react-native';
 import { WebView } from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
 import axios from 'axios';
 
 WebBrowser.maybeCompleteAuthSession();
 
-export default function App() {
-  const [showWebView, setShowWebView] = useState(false);
+export default function loginScreen() {
   const [token, setToken] = useState('');
   const [userInfo, setUserInfo] = useState(null);
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId: '338399356732-jkutfv9gkjis5736g4erm7f6p0kfq2rj.apps.googleusercontent.com',
-    androidClientId: '338399356732-s49643q71p8tu3jccm9r5im6dmenl58k.apps.googleusercontent.com',
-    iosClientId: '338399356732-8u0f78vqv5r8mp12gl3l5vtte3ig8jf2.apps.googleusercontent.com',
-  });
-
-  useEffect(() => {
-    if (response?.type === 'success') {
-      setToken(response.authentication.accessToken);
-      getUserInfo();
-    }
-  }, [response, token]);
-
-  const handleKakaoButtonPress  = async () => {
-    console.log('Kakao Button Pressed');
-    await WebBrowser.openBrowserAsync(
-      'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google'
-    );
-  };
 
   const handleGoogleButtonPress = async () => {
     console.log('Google Button Pressed');
@@ -41,7 +20,8 @@ export default function App() {
 
   const getUserInfo = async () => {
     try {
-      const response = await axios.get('https://www.googleapis.com/userinfo/v2/me', {
+      const response = await axios.get('https://www.googleapis.com/userinfo/v2/me', 
+      {
         headers: { Authorization: `Bearer ${token}` },
       });
   
@@ -61,14 +41,11 @@ export default function App() {
       <View style={styles.mentContainer}>
         <Text style={styles.ment}>⚡3초만에 시작하기</Text>
       </View>
-      <TouchableOpacity style={styles.kakaoButton} onPress={handleKakaoButtonPress}>
-        <Image source={require('../assets/kakao_button.png')} style={{ width: '100%', height: '100%' }} />
-      </TouchableOpacity>
       <TouchableOpacity style={styles.googleButton} onPress={handleGoogleButtonPress}>
         <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
       </TouchableOpacity>
-      {showWebView && <WebView source={{ uri: 'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google' }} style={{ marginTop: 10 }} />}
-      {userInfo !== null && <Text style={styles.text}>{userInfo.name}</Text>}
+      <WebView source={{ uri: 'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google' }} style={{ marginTop: 10 }} />
+
     </View>
   );
 }
