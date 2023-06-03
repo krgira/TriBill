@@ -25,8 +25,11 @@ export default function App() {
     }
   }, [response, token]);
 
-  const handleKakaoButtonPress = () => {
+  const handleKakaoButtonPress  = async () => {
     console.log('Kakao Button Pressed');
+    await WebBrowser.openBrowserAsync(
+      'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google'
+    );
   };
 
   const handleGoogleButtonPress = async () => {
