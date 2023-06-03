@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, FlatList, Modal,TouchableWithoutFeedback, Keyboard,KeyboardAvoidingView  } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios';
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -44,22 +45,23 @@ const [amount, setAmount] = useState('');
     fetchExchangeRate();
   }, []);
 
-  const fetchExchangeRate = () => {
-    fetch('/api/exchange-rate', { method: 'GET' })
-       .then(response => {
+const fetchExchangeRate = () => {
+  axios.get('http://ec2-52-79-233-82.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=베트남')
+    .then(response => {
       console.log(response); // response 객체를 콘솔에 출력합니다.
-      return response.json(); // 다음 then 메서드로 response를 전달합니다.
+      return response.data; // 다음 then 메서드로 response.data를 전달합니다.
     })
-      .then(data => {
-        const currencyKeys = Object.keys(data);
-        setExchangeRate(data);
-        setUsdAmount(data[selectedCurrency] * krwAmount);
-        setCurrencyList(currencyKeys);
-      })
-      .catch(error => {
-        console.error('환율을 가져오는 중 오류 발생:', error);
-      });
-  };
+    .then(data => {
+      const currencyKeys = Object.keys(data);
+      setExchangeRate(data);
+      setUsdAmount(data[selectedCurrency] * krwAmount);
+      setCurrencyList(currencyKeys);
+    })
+    .catch(error => {
+      console.error('환율을 가져오는 중 오류 발생:', error);
+    });
+};
+
   
 
   const handleButtonPress = (buttonName) => {
@@ -80,22 +82,16 @@ const [amount, setAmount] = useState('');
     sendButtonNameToServer(buttonName);
   };
 
-  const sendButtonNameToServer = (buttonName) => {
-    fetch('/api/button-press', {
-      method: 'POST',
-      body: JSON.stringify({ buttonName }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
+const sendButtonNameToServer = (buttonName) => {
+  axios.post('http://ec2-52-79-233-82.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=베트남', { buttonName })
+    .then(response => {
+      console.log('Button name sent to server:', buttonName);
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Button name sent to server:', buttonName);
-      })
-      .catch(error => {
-        console.error('Error sending button name to server:', error);
-      });
-  };
+    .catch(error => {
+      console.error('Error sending button name to server:', error);
+    });
+};
+
 
   const renderCurrencyItem = ({ item }) => (
     <TouchableOpacity style={styles.currencyItem} onPress={() => handleCurrencySelect(item)}>
@@ -140,27 +136,21 @@ const handleTextInputFocus = () => {
   };
 
   const handleAddButtonPress = () => {
-    const formattedAmount = parseFloat(amount);
-    const data = {
+  const formattedAmount = parseFloat(amount);
+  const data = {
     currency: selectedCurrency,
     amount: formattedAmount
   };
-   fetch('/api/save-amount', {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then(response => response.json())
-    .then(responseData => {
-     
-      console.log('서버 응답:', responseData);
+
+  axios.post('http://ec2-52-79-233-82.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=베트남', data)
+    .then(response => {
+      console.log('서버 응답:', response.data);
     })
     .catch(error => {
       console.error('서버 요청 오류:', error);
     });
-  };
+};
+
   
   
 
@@ -495,7 +485,6 @@ modalSecondText: {
     lineHeight: 15,
     color: '#4974A5',
     flex: 0,
-    order: 1,
     flexGrow: 0,
     
   },
@@ -507,8 +496,7 @@ modalSecondText: {
     fontSize: 14,
     lineHeight: 15,
     color: '#FFFFFF',
-    flex: 0,
-    order: 1,
+    flex: 0, 
     flexGrow: 0,
   },
    input: {

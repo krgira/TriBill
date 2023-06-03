@@ -1,5 +1,74 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Image, PixelRatio } from 'react-native';
+import { WebView } from 'react-native-webview';
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
+import axios from 'axios';
+
+WebBrowser.maybeCompleteAuthSession();
+
+export default function App() {
+  const [showWebView, setShowWebView] = useState(false);
+  const [token, setToken] = useState('');
+  const [userInfo, setUserInfo] = useState(null);
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId: '338399356732-jkutfv9gkjis5736g4erm7f6p0kfq2rj.apps.googleusercontent.com',
+    androidClientId: '338399356732-s49643q71p8tu3jccm9r5im6dmenl58k.apps.googleusercontent.com',
+    iosClientId: '338399356732-8u0f78vqv5r8mp12gl3l5vtte3ig8jf2.apps.googleusercontent.com',
+  });
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      setToken(response.authentication.accessToken);
+      getUserInfo();
+    }
+  }, [response, token]);
+
+  const handleKakaoButtonPress = () => {
+    console.log('Kakao Button Pressed');
+  };
+
+  const handleGoogleButtonPress = async () => {
+    console.log('Google Button Pressed');
+    await WebBrowser.openBrowserAsync(
+      'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google'
+    );
+  };
+
+  const getUserInfo = async () => {
+    try {
+      const response = await axios.get('https://www.googleapis.com/userinfo/v2/me', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      const user = response.data;
+      setUserInfo(user);
+      console.log('User Info:', user); 
+    } catch (error) {
+      console.log('Error:', error);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.star}></View>
+      <Text style={styles.welcome}>Welcome!</Text>
+      <View style={styles.box}></View>
+      <View style={styles.mentContainer}>
+        <Text style={styles.ment}>⚡3초만에 시작하기</Text>
+      </View>
+      <TouchableOpacity style={styles.kakaoButton} onPress={handleKakaoButtonPress}>
+        <Image source={require('../assets/kakao_button.png')} style={{ width: '100%', height: '100%' }} />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.googleButton} onPress={handleGoogleButtonPress}>
+        <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
+      </TouchableOpacity>
+      {showWebView && <WebView source={{ uri: 'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google' }} style={{ marginTop: 10 }} />}
+      {userInfo !== null && <Text style={styles.text}>{userInfo.name}</Text>}
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -28,7 +97,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     flexDirection: 'column',
     alignItems: 'flex-start',
-    fontFamily: 'Inter',
     fontSize: 24,
     fontWeight: '900',
     lineHeight: 29,
@@ -39,7 +107,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 92,
     height: 12.19,
-    left: '50% - 46px',
+    left: -46,
     top: 354,
     backgroundColor: '#FFFEFC',
     shadowColor: '#000',
@@ -56,14 +124,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 92,
     height: 12.19,
-    left: '50% - 46px',
+    left: -46,
     top: 354,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 2,
   },
   ment: {
-    fontFamily: 'Inter',
     fontSize: 8,
     fontWeight: '500',
     lineHeight: 10,
@@ -84,39 +151,8 @@ const styles = StyleSheet.create({
     top: 450,
     borderRadius: 9,
   },
+  text: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
 });
-
-const App = () => {
-  const handleKakaoButtonPress = () => {
-    console.log('Kakao Button Pressed');
-  };
-
-  const handleGoogleButtonPress = () => {
-    console.log('Google Button Pressed');
-  };
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.star}></View>
-      <Text style={styles.welcome}>Welcome!</Text>
-      <View style={styles.box}></View>
-      <View style={styles.mentContainer}>
-        <Text style={styles.ment}>⚡3초만에 시작하기</Text>
-      </View>
-      <TouchableOpacity style={styles.kakaoButton} onPress={handleKakaoButtonPress}>
-        <Image
-          source={require('../assets/kakao_button.png')}
-          style={{ width: '100%', height: '100%' }}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.googleButton} onPress={handleGoogleButtonPress}>
-        <Image
-          source={require('../assets/pressed.png')}
-          style={{ width: '100%', height: '100%' }}
-        />
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-export default App;
