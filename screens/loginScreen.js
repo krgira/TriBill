@@ -1,29 +1,57 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Image, PixelRatio, Button, } from 'react-native';
-import { WebView } from 'react-native-webview';
+import { WebView, Linking } from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
 import axios from 'axios';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function loginScreen() {
+  const [userToken, setUserToken] = useState('');
 
   const handleGoogleButtonPress = async () => {
-    console.log('Google Button Pressed');
     await WebBrowser.openBrowserAsync(
-      'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/login'
+      'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google'
     );
   };
 
-  const getUserInfo = async () => {
+  const getUserToken = async () => {
     try {
-      console.log('successfully'); 
-      await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/login/oauth2/code/oauth2/tok'
-      );
-      
+      console.log('Fetching user token...');
+      const response = await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/login/oauth2/code/oauth2/tok');
+      const userToken = response.data; // Assuming the response contains the userToken string
+      setUserToken(userToken);
+      console.log('User token:', userToken);
+      return userToken;
     } catch (error) {
-      console.log('error');
+      console.error('Error:', error.message);
+      throw error;
     }
+  };
+  
+  const handleWebViewNavigationStateChange = (navState) => {
+    if (navState.url.includes('/login/oauth2/code/oauth2/sign-up')) {
+      getUserToken()
+        .then(() => {
+          console.log('Token retrieval successful.');
+        })
+        .catch(() => {
+          console.log('Token retrieval failed.');
+        });
+    }
+  };
+
+  const renderWebView = () => {
+    return (
+      <WebView
+        source={{
+          uri:
+            'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google',
+        }}
+        style={{ marginTop: 10 }}
+        onNavigationStateChange={handleWebViewNavigationStateChange}
+      />
+    );
   };
 
   return (
@@ -37,19 +65,7 @@ export default function loginScreen() {
       <TouchableOpacity style={styles.googleButton} onPress={handleGoogleButtonPress}>
         <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
       </TouchableOpacity>
-      <WebView
-  source={{ uri: 'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/login' }}
-  style={{ marginTop: 10 }}
-  ref={(ref) => { webviewRef = ref; }}
-  onNavigationStateChange={(navState) => {
-    webviewRef.canGoBack = navState.canGoBack;
-    console.log('hi'); 
-    if (navState.url.includes('/oauth2/sign-up')) {
-      getUserInfo();
-      return false;
-    }
-  }}
-/>
+      {renderWebView()}
     </View>
   );
 }
