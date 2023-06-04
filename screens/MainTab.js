@@ -21,7 +21,7 @@ function MainTab() {
       }}
     >
       <Tab.Screen 
-        name='Main' 
+        name='나의 여행 리스트' 
         component={MainScreen} 
         options={{
           tabBarIcon: ({color, size}) => (

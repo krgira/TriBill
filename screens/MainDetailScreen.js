@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import { 
-  Platform,
   ScrollView,
   Image,
   Text, 
@@ -21,34 +20,7 @@ import axios from 'axios';
 //  members: [],
 
 //}
-const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NTM1NTU2MSwiZW1haWwiOiJjZWUyN2IxYS1jZmY2LTRhYjEtYTIyZS03ZTMyZTRmYzQ4MTlAc29jaWFsVXNlci5jb20ifQ.BP17dgYXPILyS7kG129zdi38ISFfeYeKLegQOkw09BVdLEGIoNcPOTFzUISTq7n1nCiryKRc9WF28ZWdwE5K4Q";
-async function fetchData() {
-  try {
-    const response = await axios.get('http://172.30.1.16:8080/api/budget/trip/4/show', {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    });
 
-    console.log(response);
-
-    if (response.status === 200) {
-      const data = response.data;
-      const members = data.member;
-      const exchangeRate = data.exchangeRate;
-
-      // Process the retrieved data
-      console.log(data);
-    } else {
-      // Handle error responses
-      console.log('Error(response-not okay):', response.data);
-    }
-  } catch (error) {
-    // Handle network errors
-    console.log('Error(fetchdata error):', error);
-  }
-};
 
 /*
 async function fetchData() {
@@ -81,14 +53,78 @@ async function fetchData() {
 
 
 export default function App() {
+  const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NTg4NjkyOSwiZW1haWwiOiIzNzMyOGRlZC04OGE0LTQ0MjQtYWZhYS0zNWJmMDkzZWUxZDBAc29jaWFsVXNlci5jb20ifQ.NrwnqemT5qtLWUqUwSbTZc4zxJ6Jb_wSpXgB3Jy4RoAmPgiBlDcYtNU0C2HdNqLteedsaFQ43azaskuRL5DEQg";
 
-  fetchData();
-  const [text, onChangeText] = useState('');
-  const [number, onChangeNumber] = useState();
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/budget/trip/1/show', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+  
+      console.log(response);
+  
+      if (response.status === 200) {
+        const data = response.data;
+        const members = data.member;
+        const exchangeRateMap = data.exchangeRate;
+  
+        // Convert the exchangeRate Map to an array of key-value pairs
+        const exchangeRateArray = Object.keys(exchangeRateMap);
+  
+        // Process the retrieved data
+        console.log(data);
+  
+        // Update members, currencyTypes, and exchangeRate state variables with the retrieved data
+        setMembers(members);
+        setExchangeRates(exchangeRateArray);
+      } else {
+        // Handle error responses
+        console.log('Error (response not okay):', response.data);
+      }
+    } catch (error) {
+      // Handle network errors
+      console.log('Error (fetchData error):', error);
+    }
+  };
+
+  //fetchData();
+  const [members, setMembers] = useState([]);
+  const [exchangeRates, setExchangeRates] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const paymethods = ["CREDIT", "CASH"];
+  const cartegorys = ["숙소", "항공", "교통", "식비", "관광", "쇼핑", "기타"];
+  const icons = {
+    숙소 : "home",
+    항공: "airplane",
+    교통: "bus",
+    식비: "ios-restaurant",
+    관광: "images",
+    쇼핑: "basket",
+    기타: "apps",
+  };
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const day = String(currentDate.getDate()).padStart(2, '0');
+  
+  const formattedDate = `${year}-${month}-${day}`;
+
+  const [description, onChangeDescription] = useState('');
+  const [money, onChangeMoney] = useState();
   const [category, setCategory] = useState('');
+  const [paymethod, setPaymethod] = useState(paymethods[0]);
+  const [exchangeRate, setExchangeRate] = useState(exchangeRates[0]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedPayWithPeople, setSelectedPayWithPeople] = useState([]);
   const [selectedSpendWithPeople, setSelectedSpendWithPeople] = useState([]);
+  //console.log(selectedSpendWithPeople);
 
   const handlePayWithPress = (item) => {
     if (selectedPayWithPeople.includes(item)) {
@@ -153,63 +189,57 @@ export default function App() {
     </TouchableOpacity>
   );
 
-
-  console.log(category);
-  const pplname = ["규리뽀", "최호빵", "승재"];
-  const paymethod = ["신용카드", "현금"];
-  const cartegorys = ["숙소", "항공", "교통", "식비", "관광", "쇼핑", "기타"];
-  const currencyTypes = ['USD', 'KRW'];
-  const icons = {
-    숙소 : "home",
-    항공: "airplane",
-    교통: "bus",
-    식비: "ios-restaurant",
-    관광: "images",
-    쇼핑: "basket",
-    기타: "apps",
-  };
-
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      console.log('Permission to access camera roll is required!');
+      return;
+    }
+
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
+      allowsEditing: false,
       aspect: [4, 3],
       quality: 1,
     });
 
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
+    if (!result.cancelled) {
+      setImage(result.uri);
     }
   };
-/*
-  const setSchedule = () => {
-    fetch('http://172.30.1.16:8080/test/calendar', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
 
-      }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        console.log("start date:", data.startDate);
-        console.log("end date:", data.endDate);
-      })
-      .catch(error => {
-        console.error(error);
+  const setAccountList = async () => {
+    const formData = new FormData();
+    formData.append('title', description);
+    formData.append('nationMoney', money);
+    formData.append('registerDate', formattedDate);
+    formData.append('SpendWith', selectedSpendWithPeople);
+    formData.append('WhoPay', selectedPayWithPeople);
+    formData.append('type', paymethod);
+    formData.append('category', category);
+    formData.append('multiPartFile', {
+      uri: image,
+      type: 'image/jpeg', // Modify the type according to your requirements
+      name: 'image.jpg',
+    });
+  
+    try {
+      const response = await axios.post('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/budget/trip/1/register', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-    console.log("fetch end");
+  
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  
+    console.log('fetch end');
   };
-*/
 
 
 
@@ -220,14 +250,14 @@ export default function App() {
       </View>
       <ScrollView>
       <SelectDropdown
-          data={currencyTypes}
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index)
+          data={exchangeRates}
+          onSelect={(selectedItem) => {
+            setExchangeRate(selectedItem)
           }}
-          buttonTextAfterSelection={(selectedItem, index) => {
+          buttonTextAfterSelection={(selectedItem) => {
             return selectedItem
           }}
-          rowTextForSelection={(item, index) => {
+          rowTextForSelection={(item) => {
             return item
           }}
           buttonStyle={styles.currencyButton}
@@ -239,19 +269,19 @@ export default function App() {
       <SafeAreaView style={styles.money}>
         <TextInput 
         style={styles.inputMoney}
-        onChangeText={onChangeNumber}
-        value={number}
+        onChangeText={onChangeMoney}
+        value={money}
         keyboardType="numeric"
         />
         <SelectDropdown
-          data={paymethod}
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index)
+          data={paymethods}
+          onSelect={(selectedItem) => {
+            setPaymethod(selectedItem)
           }}
-          buttonTextAfterSelection={(selectedItem, index) => {
+          buttonTextAfterSelection={(selectedItem) => {
             return selectedItem
           }}
-          rowTextForSelection={(item, index) => {
+          rowTextForSelection={(item) => {
             return item
           }}
           buttonStyle={styles.categoryButton}
@@ -273,8 +303,8 @@ export default function App() {
         <Text style={styles.text}>설명</Text>
         <TextInput 
         style={styles.inputDescription}
-        value={text}
-        onChangeText={onChangeText}
+        value={description}
+        onChangeText={onChangeDescription}
         placeholder="글자 입력"
         />
       </View>
@@ -283,7 +313,7 @@ export default function App() {
       <SafeAreaView style={{flex:0.5}}>
         <Text style={styles.text}>결제한 사람</Text>
         <View style={styles.choose}>
-          {pplname.map(renderPayWith)}
+          {members.map(renderPayWith)}
         </View>
       </SafeAreaView>
 
@@ -291,7 +321,7 @@ export default function App() {
       <SafeAreaView style={{flex:0.5}}>
         <Text style={styles.text}>함께 쓴 사람</Text>
         <View style={styles.choose}>
-          {pplname.map(renderSpendWith)}
+          {members.map(renderSpendWith)}
         </View>
       </SafeAreaView>
 
@@ -300,11 +330,14 @@ export default function App() {
         <Text style={styles.text}>사진</Text>
         <View>
            <Button title="Pick an image from camera roll" onPress={pickImage} />
-          {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+          {image && <Image source={{ uri: image }}  style={{ width: 200, height: 200 }}/>}
         </View>
       </View>
       </ScrollView>
-    <TouchableOpacity style={styles.endContainer}>
+    <TouchableOpacity 
+      style={styles.endContainer}
+      onPress={setAccountList}
+      >
       <Text style={styles.endText}>등록하기</Text>
     </TouchableOpacity>
 

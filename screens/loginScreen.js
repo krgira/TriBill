@@ -42,6 +42,10 @@ export default function loginScreen() {
   };
 
   const renderWebView = () => {
+    console.log('renderWebView');
+    Linking.getInitialURL().then((url) => {
+      console.log(url);
+    });
     return (
       <WebView
         source={{
@@ -66,6 +70,7 @@ export default function loginScreen() {
         <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
       </TouchableOpacity>
       {renderWebView()}
+      
     </View>
   );
 }
