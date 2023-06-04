@@ -62,7 +62,7 @@ export default function loginScreen() {
       <View style={styles.mentContainer}>
         <Text style={styles.ment}>⚡3초만에 시작하기</Text>
       </View>
-      <TouchableOpacity style={styles.googleButton} onPress={handleGoogleButtonPress}>
+      <TouchableOpacity style={styles.googleButton} >
         <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
       </TouchableOpacity>
       {renderWebView()}
