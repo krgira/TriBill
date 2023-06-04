@@ -44,9 +44,10 @@ export default function loginScreen() {
   onNavigationStateChange={(navState) => {
     webviewRef.canGoBack = navState.canGoBack;
     console.log('hi'); 
-    if (window.location.href.includes('/oauth2/sign-up')) {
-      console.log("testing");
-        }
+    if (navState.url.includes('/oauth2/sign-up')) {
+      getUserInfo();
+      return false;
+    }
   }}
 />
     </View>
