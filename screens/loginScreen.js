@@ -17,7 +17,7 @@ export default function loginScreen() {
 
   const getUserInfo = async () => {
     try {
-      console.log('success'); 
+      console.log('successfully'); 
       await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/login/oauth2/code/oauth2/tok'
       );
       
