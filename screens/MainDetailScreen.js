@@ -52,7 +52,7 @@ async function fetchData() {
 */
 
 
-export default function App() {
+export default function MainDetailScreen() {
   const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NTg4NjkyOSwiZW1haWwiOiIzNzMyOGRlZC04OGE0LTQ0MjQtYWZhYS0zNWJmMDkzZWUxZDBAc29jaWFsVXNlci5jb20ifQ.NrwnqemT5qtLWUqUwSbTZc4zxJ6Jb_wSpXgB3Jy4RoAmPgiBlDcYtNU0C2HdNqLteedsaFQ43azaskuRL5DEQg";
 
   const fetchData = async () => {

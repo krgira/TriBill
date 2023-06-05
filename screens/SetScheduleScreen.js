@@ -16,8 +16,8 @@ const isSameDay = (date1, date2) => {
 
 
 function CalendarView() {
-  const [selectedStartDate, setSelectedStartDate] = useState(null);
-  const [selectedEndDate, setSelectedEndDate] = useState(null);
+  const [selectedStartDate, setSelectedStartDate] = useState();
+  const [selectedEndDate, setSelectedEndDate] = useState();
 
   console.log('start: ', selectedStartDate);
   console.log('End: ', selectedEndDate);

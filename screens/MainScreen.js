@@ -1,74 +1,123 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { 
   View,
   ScrollView, 
   StyleSheet,
   TouchableOpacity,
   Text,
-  FlatList,
+  Alert,
   } from 'react-native';
-import { NavigationContainer } from "@react-navigation/native";
-import { List, Button, Avatar } from 'react-native-paper';
-import { createStackNavigator } from "@react-navigation/stack";
+import { List, Avatar } from 'react-native-paper';
+import axios from 'axios';
 import "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from '@expo/vector-icons';
 
 import MainCalender from '../components/MainCalender';
 import FloatingWriteButton from '../components/FloatingWriteButton';
 
-const stack = createStackNavigator();
 
 
-function MainScreen({navigation}) {
-  const pplname = ["규리뽀", "최호빵", "승재"];
-  const [selectedMember, setSelectedMember] = useState(pplname[0]);
-  const currency = 0.5;
-  const data = [
-    {
-      id: 1,
-      title: "Item 1",
-      description: "Description for Item 1",
-      imageUri: "https://example.com/image1.jpg",
-      money: 500,
-    },
-    {
-      id: 2,
-      title: "Item 2",
-      description: "Description for Item 2",
-      imageUri: "https://example.com/image2.jpg",
-      money: 200,
-    },
-    // Add more items as needed
-  ];
-
-  const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NTM1NTU2MSwiZW1haWwiOiJjZWUyN2IxYS1jZmY2LTRhYjEtYTIyZS03ZTMyZTRmYzQ4MTlAc29jaWFsVXNlci5jb20ifQ.BP17dgYXPILyS7kG129zdi38ISFfeYeKLegQOkw09BVdLEGIoNcPOTFzUISTq7n1nCiryKRc9WF28ZWdwE5K4Q";
-  async function fetchData() {
+function MainScreen() {
+  const navigation = useNavigation();
+  const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NTk3NzM2MywiZW1haWwiOiIzNzMyOGRlZC04OGE0LTQ0MjQtYWZhYS0zNWJmMDkzZWUxZDBAc29jaWFsVXNlci5jb20ifQ.DlLlQcLYjPeEj0fSs9J7yjDCppDrhVwOVUBM85MkGy8UJ1x8BB-jLy1RQb41_QK7NEO4WTdciB1IuLc9M02Elg";
+  const fetchData = async () => {
     try {
-      const response = await axios.get('http://172.30.1.16:8080/api/budget/trip/4/show', {
+      const response = await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/budget/trip/1/details?userName=이승재/학생/컴퓨터공학', {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
       });
-
+  
       console.log(response);
-
+  
       if (response.status === 200) {
         const data = response.data;
-        const members = data.member;
-        const exchangeRate = data.exchangeRate;
-
-        // Process the retrieved data
-        console.log(data);
+        console.log(data); // Log the received data
+  
+        const userList = data.userList;
+        const budgetList = data.budgetList;
+  
+        const names = userList.map(user => user.name);
+        console.log(names); // Log the extracted names
+  
+        // Update members state variable with the retrieved names
+        setMember(names);
+        setAccountList(budgetList);
       } else {
         // Handle error responses
-        console.log('Error(response-not okay):', response.data);
+        console.log('Error (response not okay):', response.data);
       }
     } catch (error) {
       // Handle network errors
-      console.log('Error(fetchdata error):', error);
+      console.log('Error (fetchData error):', error);
     }
   };
+  
+  const deleteItem = async (budgetListId) => {
+    try {
+      const response = await axios.delete(
+        `http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/budget/delete?id=${budgetListId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        }
+      );
+  
+      console.log(response);
+  
+      if (response.status === 200) {
+        // Item deleted successfully, perform any additional actions if needed
+      } else {
+        // Handle error responses
+        console.log('Error (response not okay):', response.data);
+      }
+    } catch (error) {
+      // Handle network errors
+      console.log('Error (deleteItem error):', error);
+    }
+  };
+
+  const [member, setMember] = useState([]);
+  const [accountList, setAccountList] = useState();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const [selectedMember, setSelectedMember] = useState(member[0]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedStartDate, setSelectedStartDate] = useState();
+  const [selectedEndDate, setSelectedEndDate] = useState();
+
+
+  const showDeleteConfirmation = (item) => {
+    Alert.alert(
+      'Delete Item',
+      `Are you sure you want to delete ${item.title}?`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => {
+            setSelectedItem(null); // Clear selected item
+          },
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            deleteItem(item.id); // Call deleteItem function with budgetList ID
+            fetchData();
+            setSelectedItem(null); // Clear selected item
+          },
+        },
+      ]
+    );
+  };  
 
   const handleMemberPress = (item) => {
     setSelectedMember(item);
@@ -93,7 +142,7 @@ function MainScreen({navigation}) {
       <View style={styles.memberContainer}>
       <ScrollView horizontal>
         <View style={{flexDirection: "row"}}>
-          {pplname.map(renderMember)}
+          {member && member.map(renderMember)}
         </View>
         <TouchableOpacity>
           <Ionicons style={styles.addButton} name="add-circle-outline" size={50} color="black" />
@@ -105,14 +154,14 @@ function MainScreen({navigation}) {
       <View style={styles.calender}>
         <MainCalender />
       </View>
-     
+
 
       <ScrollView style={styles.lists}>
-        {data.map(item => (
+        {accountList && accountList.map(item => (
           <View key={item.id} style={{ borderRadius: 5, borderWidth: 1, margin: 5, borderColor: '#e0e0e0' }}>
             <List.Item
               title={item.title}
-              description={item.description}
+              description={""}
               left={props => (
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                   <Avatar.Image size={50} source={{ uri: item.imageUri }} />
@@ -120,10 +169,17 @@ function MainScreen({navigation}) {
               )}
               right={props => (
                 <View>
-                  <Text>{item.money}</Text>
-                  <Text>{item.money * currency}</Text>
+                  <Text>{item.nationMoney}</Text>
+                  <Text>{item.kmoney}</Text>
                 </View>
               )}
+              onPress={() => {
+                navigation.navigate('MainUpdate', { itemId: item.id });
+              }}
+              onLongPress={() => {
+                setSelectedItem(item); // Set selected item
+                showDeleteConfirmation(item); // Show delete confirmation
+              }}
             />
           </View>
         ))}
