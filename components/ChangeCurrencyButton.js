@@ -4,28 +4,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 
-const screenWidth = Dimensions.get("window").width;
-
 function ChangeCurrencyButton() {
-  const formatCurrency = (value) => {
-    if (typeof value !== 'number') {
-      value = parseFloat(value);
-    }
 
-    if (isNaN(value)) {
-      return '';
-    }
-
-    if (value > 0) {
-      if (value % 1 !== 0) {
-        return value.toFixed(2);
-      } else {
-        return value.toFixed(0);
-      }
-    } else {
-      return value.toFixed(6);
-    }
-  };
+  const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NTg4NzkwNCwiZW1haWwiOiIzNzMyOGRlZC04OGE0LTQ0MjQtYWZhYS0zNWJmMDkzZWUxZDBAc29jaWFsVXNlci5jb20ifQ.jvz6sAwLI0V6n5T_Zr7JaUigx5JMi90vPZCaasZ5FvJqv_CPTMGOr8_fnG9JtuL1vUOmh1ZFjjiycSli0zI-CA";
 
   const [krwAmount, setKrwAmount] = useState(1);
   const [usdAmount, setUsdAmount] = useState(0);
@@ -34,148 +15,288 @@ function ChangeCurrencyButton() {
   const [showCurrencyList, setShowCurrencyList] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState('');
   const [isListExpanded, setListExpanded] = useState(false);
-  const [currencyList, setCurrencyList] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
-const [budget, setBudget] = React.useState('');
-const [buttonContainerStyle, setButtonContainerStyle] = useState(styles.buttonContainer);
-const [amount, setAmount] = useState('');
+  const [budget, setBudget] = React.useState('');
+  const [buttonContainerStyle, setButtonContainerStyle] = useState(styles.buttonContainer);
+  const [amount, setAmount] = useState('');
 
-  useEffect(() => {
-    fetchExchangeRate();
-  }, []);
+const fetchExchangeRate = async () => { //get으로 환율 받아오기
+  
+  try {
+  const response = await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=USD', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
-const fetchExchangeRate = () => {
-  axios.get('http://ec2-52-79-233-82.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=베트남')
-    .then(response => {
-      console.log(response); // response 객체를 콘솔에 출력합니다.
-      return response.data; // 다음 then 메서드로 response.data를 전달합니다.
-    })
-    .then(data => {
-      const currencyKeys = Object.keys(data);
-      setExchangeRate(data);
-      setUsdAmount(data[selectedCurrency] * krwAmount);
-      setCurrencyList(currencyKeys);
-    })
-    .catch(error => {
-      console.error('환율을 가져오는 중 오류 발생:', error);
-    });
+    console.log(response);
+
+    const data = response.data;
+    const currencyKeys = data.nation; 
+    const exchangeRate = data.rate;
+
+    console.log(currencyKeys);
+    console.log(exchangeRate);
+
+    setExchangeRate(exchangeRate);
+    }
+    catch(error){
+      console.log('환율을 가져오는 중 오류 발생:', error);
+    };
 };
 
-  const handleButtonPress = (buttonName) => {
+useEffect(() => {
+  fetchExchangeRate();
+}, []);
+
+const formatCurrency = (value) => { // 0이하면 소수점 여섯째 자리까지, 1이상이면 소수점 둘째 자리까지 
+  if (typeof value !== 'number') {
+    value = parseFloat(value);
+  }
+
+  if (isNaN(value)) {
+    return '';
+  }
+
+  if (value > 0) {
+    if (value % 1 !== 0) {
+      return value.toFixed(2);
+    } else {
+      return value.toFixed(0);
+    }
+  } else {
+    return value.toFixed(6);
+  }
+};
+
+  const handleButtonPress = (buttonName) => { // 각각 버튼 눌렀을 때 기능
+    console.log('hi');
+    
     if (buttonName === 'krw') {
+      fetchExchangeRate();
       setActiveButton('krw');
       setKrwAmount(1);
-      setUsdAmount((1 * exchangeRate[selectedCurrency]).toFixed(6));
-      setListExpanded(false);
+      setUsdAmount((1 * exchangeRate).toFixed(6)); // 
+      // setListExpanded(false);
       setShowCurrencyList(false);
     } else if (buttonName === 'usd') {
+      fetchExchangeRate();
       setActiveButton('usd');
       setUsdAmount(1);
-      setKrwAmount((1 / exchangeRate[selectedCurrency]).toFixed(6));
-      setListExpanded(!isListExpanded);
+      setKrwAmount((1 / exchangeRate).toFixed(6));
+      // setListExpanded(!isListExpanded);
       setShowCurrencyList(!showCurrencyList);
     }
 
     sendButtonNameToServer(buttonName);
   };
 
-const sendButtonNameToServer = (buttonName) => {
-  
-  axios.post('http://ec2-52-79-233-82.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=베트남', { buttonName })
-    .then(response => {
-      console.log('Button name sent to server:', buttonName);
-    })
-    .catch(error => {
-      console.error('Error sending button name to server:', error);
-    });
+  const renderCurrencyItem = (buttonName) => ( //화폐선택항목 리스트에서 각각
+  <TouchableOpacity style={styles.currencyItem} onPress={() => handleButtonPress(buttonName)}>
+    <Text style={styles.currencyText}>{buttonName}</Text>
+  </TouchableOpacity>
+);
+
+  const sendButtonNameToServer = async (buttonName) => {
+  try {
+    const response = axios.post('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=USD', { buttonName })
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
+const currencyList = [
+  {"buttonName": "USD"},
+  {"buttonName": "EUR"},
+  {"buttonName": "JPY"},
+  {"buttonName": "GBP"},
+  {"buttonName": "CAD"},
+  {"buttonName": "AUD"},
+  {"buttonName": "GHS"},
+  {"buttonName": "GNF"},
+  {"buttonName": "GMD"},
+  {"buttonName": "GYD"},
+  {"buttonName": "GGP"},
+  {"buttonName": "XDR"},
+  {"buttonName": "GRC"},
+  {"buttonName": "GTQ"},
+  {"buttonName": "ANG"},
+  {"buttonName": "NOK"},
+  {"buttonName": "NAD"},
+  {"buttonName": "SSP"},
+  {"buttonName": "NGN"},
+  {"buttonName": "ZAR"},
+  {"buttonName": "NZD"},
+  {"buttonName": "NIO"},
+  {"buttonName": "NLD"},
+  {"buttonName": "NPR"},
+  {"buttonName": "TWD"},
+  {"buttonName": "DOP"},
+  {"buttonName": "DKK"},
+  {"buttonName": "FOK"},
+  {"buttonName": "XCD"},
+  {"buttonName": "RON"},
+  {"buttonName": "LBP"},
+  {"buttonName": "LYD"},
+  {"buttonName": "RUB"},
+  {"buttonName": "LSL"},
+  {"buttonName": "RWF"},
+  {"buttonName": "LRD"},
+  {"buttonName": "LAK"},
+  {"buttonName": "MNT"},
+  {"buttonName": "MGA"},
+  {"buttonName": "MDL"},
+  {"buttonName": "MVR"},
+  {"buttonName": "MUR"},
+  {"buttonName": "MWK"},
+  {"buttonName": "MYR"},
+  {"buttonName": "MAD"},
+  {"buttonName": "MRU"},
+  {"buttonName": "IMP"},
+  {"buttonName": "MXN"},
+  {"buttonName": "MMK"},
+  {"buttonName": "MZN"},
+  {"buttonName": "MOP"},
+  {"buttonName": "BDT"},
+  {"buttonName": "BGN"},
+  {"buttonName": "VES"},
+  {"buttonName": "VUV"},
+  {"buttonName": "BND"},
+  {"buttonName": "BIF"},
+  {"buttonName": "BYN"},
+  {"buttonName": "BOB"},
+  {"buttonName": "BHD"},
+  {"buttonName": "BRL"},
+  {"buttonName": "BZD"},
+  {"buttonName": "BMD"},
+  {"buttonName": "MKD"},
+  {"buttonName": "BBD"},
+  {"buttonName": "BAM"},
+  {"buttonName": "BWP"},
+  {"buttonName": "BTN"},
+  {"buttonName": "VND"},
+  {"buttonName": "BSD"},
+  {"buttonName": "SGD"},
+  {"buttonName": "SDG"},
+  {"buttonName": "SRD"},
+  {"buttonName": "LKR"},
+  {"buttonName": "SBD"},
+  {"buttonName": "RSD"},
+  {"buttonName": "SYP"},
+  {"buttonName": "SOS"},
+  {"buttonName": "WST"},
+  {"buttonName": "XOF"},
+  {"buttonName": "SEK"},
+  {"buttonName": "SAR"},
+  {"buttonName": "SLE"},
+  {"buttonName": "SLL"},
+  {"buttonName": "CHF"},
+  {"buttonName": "SCR"},
+  {"buttonName": "SZL"},
+  {"buttonName": "SHP"},
+  {"buttonName": "STN"},
+  {"buttonName": "UGX"},
+  {"buttonName": "AOA"},
+  {"buttonName": "INR"},
+  {"buttonName": "IDR"},
+  {"buttonName": "HNL"},
+  {"buttonName": "IRR"},
+  {"buttonName": "UYU"},
+  {"buttonName": "JOD"},
+  {"buttonName": "AMD"},
+  {"buttonName": "AWG"},
+  {"buttonName": "AED"},
+  {"buttonName": "IQD"},
+  {"buttonName": "ERN"},
+  {"buttonName": "ARS"},
+  {"buttonName": "OMR"},
+  {"buttonName": "YER"},
+  {"buttonName": "ALL"},
+  {"buttonName": "ILS"},
+  {"buttonName": "ISK"},
+  {"buttonName": "HTG"}
+];
 
-  const renderCurrencyItem = ({ item }) => (
-    <TouchableOpacity style={styles.currencyItem} onPress={() => handleCurrencySelect(item)}>
-      <Text style={styles.currencyText}>{item}</Text>
-    </TouchableOpacity>
-  );
+  // const handleCurrencySelect = (currency) => { //여기부분 지울수도
+  //   setSelectedCurrency(currency);
+  //   setListExpanded(false);
+  //   setShowCurrencyList(false);
 
-  const handleCurrencySelect = (currency) => {
-    setSelectedCurrency(currency);
-    setListExpanded(false);
-    setShowCurrencyList(false);
+  //   if (activeButton === 'krw') {
+  //     setUsdAmount(1);
+  //     setKrwAmount((1 / exchangeRate[currency]).toFixed(6));
+  //   } else if (activeButton === 'usd') {
+  //     setKrwAmount(1);
+  //     setUsdAmount((1 * exchangeRate[currency]).toFixed(6));
+  //   }
+  // };//여기까지
 
-    if (activeButton === 'krw') {
-      setUsdAmount(1);
-      setKrwAmount((1 / exchangeRate[currency]).toFixed(6));
-    } else if (activeButton === 'usd') {
-      setKrwAmount(1);
-      setUsdAmount((1 * exchangeRate[currency]).toFixed(6));
-    }
-  };
+  //여기 아래부터는 환율 알림 버튼 
 
-  const handleIconPress = () => {
+//   const handleIconPress = () => {
     
-    setModalVisible(true);
+//     setModalVisible(true);
 
-  };
-  const closeModal = () => {
-  setModalVisible(false);
-};
-
-
-const handleTextInputFocus = () => {
-    inputRef.current.focus();
-  };
-    const handleTextChange = (value) => {
-    const numericValue = value.replace(/[^0-9]/g, '');
-    setBudget(numericValue);
-  };
-
-  const handleContainerPress = () => {
-    Keyboard.dismiss();
-  };
-
-  const handleAddButtonPress = () => {
-  const formattedAmount = parseFloat(amount);
-  const data = {
-    currency: selectedCurrency,
-    amount: formattedAmount
-  };
-
-  axios.post('http://ec2-52-79-233-82.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=베트남', data)
-    .then(response => {
-      console.log('서버 응답:', response.data);
-    })
-    .catch(error => {
-      console.error('서버 요청 오류:', error);
-    });
-};
-
-  
-  
-
-    React.useEffect(() => {
-    Keyboard.addListener('keyboardWillShow', handleKeyboardWillShow);
-    Keyboard.addListener('keyboardWillHide', handleKeyboardWillHide);
-
-    return () => {
-      Keyboard.removeListener('keyboardWillShow', handleKeyboardWillShow);
-      Keyboard.removeListener('keyboardWillHide', handleKeyboardWillHide);
-    };
-  }, []);
-const handleKeyboardWillShow = () => {
-  setButtonContainerStyle({...styles.buttonContainer, top: 150});
-};
-
-const handleKeyboardWillHide = () => {
-  setButtonContainerStyle(styles.buttonContainer);
-};
+//   };
+//   const closeModal = () => {
+//   setModalVisible(false);
+// };
 
 
- const inputRef = React.useRef(null);
+// const handleTextInputFocus = () => {
+//     inputRef.current.focus();
+//   };
+//     const handleTextChange = (value) => {
+//     const numericValue = value.replace(/[^0-9]/g, '');
+//     setBudget(numericValue);
+//   };
+
+//   const handleContainerPress = () => {
+//     Keyboard.dismiss();
+//   };
+
+//   const handleAddButtonPress = () => {//여기부터 지울수도
+//   const formattedAmount = parseFloat(amount);
+//   const data = {
+//     currency: selectedCurrency,
+//     amount: formattedAmount
+//   };
+
+//   axios.post('http://ec2-52-79-233-82.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=USD', data)
+//     .then(response => {
+//       console.log('서버 응답:', response.data);
+//     })
+//     .catch(error => {
+//       console.error('서버 요청 오류:', error);
+//     });
+// }; //여기부분 지울수도
+
+//     React.useEffect(() => {
+//     Keyboard.addListener('keyboardWillShow', handleKeyboardWillShow);
+//     Keyboard.addListener('keyboardWillHide', handleKeyboardWillHide);
+
+//     return () => {
+//       Keyboard.removeListener('keyboardWillShow', handleKeyboardWillShow);
+//       Keyboard.removeListener('keyboardWillHide', handleKeyboardWillHide);
+//     };
+//   }, []);
+// const handleKeyboardWillShow = () => {
+//   setButtonContainerStyle({...styles.buttonContainer, top: 150});
+// };
+
+// const handleKeyboardWillHide = () => {
+//   setButtonContainerStyle(styles.buttonContainer);
+// };
+
+
+//  const inputRef = React.useRef(null);
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity
+        <TouchableOpacity //krw버튼
           style={[
             styles.button,
             styles.centerButton,
@@ -187,14 +308,13 @@ const handleKeyboardWillHide = () => {
           <Text style={styles.buttonAmount}>{formatCurrency(krwAmount)}</Text>
         </TouchableOpacity>
         
-
-
-
-        <View style={[styles.sortIcon, { top: 20, left: 182 }]}>
+        {/* 양방향 화살표 */}
+        <View style={[styles.sortIcon, { top: 20, left: 175 }]}>
   <Icon name="ios-swap-horizontal" size={24} color="#333333" />
 </View>
 
-        <TouchableOpacity
+
+        <TouchableOpacity //usd 버튼
           style={[
             styles.button,
             styles.auxiliaryButton,
@@ -212,8 +332,16 @@ const handleKeyboardWillHide = () => {
           </Text>
           <Text style={styles.buttonAmount}>{formatCurrency(usdAmount)}</Text>
         </TouchableOpacity>
-        
 
+        <FlatList
+            data={currencyList.buttonName}
+            renderItem={renderCurrencyItem}
+            style={styles.currencyList}
+            numColumns={1}
+          />
+        
+        {/* 환율알림버튼시작 */}
+ {/*
         <View style={[styles.sortIcon, { position: 'absolute', bottom: 20, right: 20 }]}>
         <View style={styles.bellButtonContainer}>
                 <View style={[styles.sortIcon, { position: 'absolute', bottom: 20, right: 20 }]}>
@@ -222,8 +350,8 @@ const handleKeyboardWillHide = () => {
   </TouchableOpacity>
 </View> 
 </View>
- <View>
-      <TouchableOpacity onPress={handleIconPress}>
+ <View> 
+      <TouchableOpacity onPress={handleIconPress}> 
       </TouchableOpacity>
     <Modal visible={isModalVisible} animationType="slide" transparent={true}>
       <TouchableOpacity
@@ -267,20 +395,11 @@ const handleKeyboardWillHide = () => {
  </TouchableWithoutFeedback>
       </TouchableOpacity>
       </Modal>
-    </View>
-
-
-        </View>
-
-        {showCurrencyList && (
-          <FlatList
-            data={currencyList}
-            renderItem={renderCurrencyItem}
-            keyExtractor={(item, index) => index.toString()}
-            style={styles.currencyList}
-            numColumns={1}
-          />
-        )}
+    </View> 
+    
+        </View>*/ }
+        {/* 환율버튼알림 끝 */}
+        
       </View>
     </View>
 
@@ -508,5 +627,6 @@ modalSecondText: {
   },
   
 });
+
 
 export default ChangeCurrencyButton;
