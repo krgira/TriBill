@@ -40,7 +40,6 @@ const [budget, setBudget] = React.useState('');
 const [buttonContainerStyle, setButtonContainerStyle] = useState(styles.buttonContainer);
 const [amount, setAmount] = useState('');
 
-
   useEffect(() => {
     fetchExchangeRate();
   }, []);
@@ -62,8 +61,6 @@ const fetchExchangeRate = () => {
     });
 };
 
-  
-
   const handleButtonPress = (buttonName) => {
     if (buttonName === 'krw') {
       setActiveButton('krw');
@@ -83,6 +80,7 @@ const fetchExchangeRate = () => {
   };
 
 const sendButtonNameToServer = (buttonName) => {
+  
   axios.post('http://ec2-52-79-233-82.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=베트남', { buttonName })
     .then(response => {
       console.log('Button name sent to server:', buttonName);
@@ -405,7 +403,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#FFFFFF',
     },
     modalText: {
-    fontFamily: 'Inter',
+    // fontFamily: 'Inter',
     fontSize: 16,
     fontWeight: '900',
     lineHeight: 19,
@@ -432,7 +430,7 @@ const styles = StyleSheet.create({
 },
 modalSecondText: {
     top:50,
-    fontFamily: 'Inter',
+    // fontFamily: 'Inter',
     fontSize: 13,
     fontWeight: '400',
     lineHeight: 16,
@@ -479,7 +477,7 @@ modalSecondText: {
     leftboxText: {
     width: 23,
     height: 15,
-    fontFamily: 'Inter',
+    // fontFamily: 'Inter',
     fontWeight: 'bold',
     fontSize: 14,
     lineHeight: 15,
@@ -491,7 +489,7 @@ modalSecondText: {
   rightboxText: {
     width: 23,
     height: 15,
-    fontFamily: 'Inter',
+    // fontFamily: 'Inter',
     fontWeight: 'bold',
     fontSize: 14,
     lineHeight: 15,
@@ -501,7 +499,7 @@ modalSecondText: {
   },
    input: {
     flex: 1,
-    fontFamily: 'Inter',
+    // fontFamily: 'Inter',
     fontSize: 16,
     fontWeight: '900',
     lineHeight: 21,

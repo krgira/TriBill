@@ -24,6 +24,7 @@
     "expo-google-app-auth": "~8.3.0",
     "expo-google-sign-in": "^11.0.0",
     "expo-image-picker": "~14.1.1",
+    "expo-linking": "~4.0.1",
     "expo-random": "~13.1.1",
     "expo-status-bar": "~1.4.4",
     "expo-web-browser": "^12.1.1",
@@ -40,7 +41,7 @@
     "react-native-screens": "~3.20.0",
     "react-native-select-dropdown": "^3.3.3",
     "react-native-svg": "13.4.0",
-    "react-native-webview": "11.26.0"
+    "react-native-webview": "^11.26.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

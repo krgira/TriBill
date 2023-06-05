@@ -1,25 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Image, PixelRatio, Button, } from 'react-native';
-import { WebView, Linking } from 'react-native-webview';
+import { WebView}  from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
 import axios from 'axios';
+import * as Linking from 'expo-linking';
+
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function loginScreen() {
   const [userToken, setUserToken] = useState('');
 
+
+
   const handleGoogleButtonPress = async () => {
-    await WebBrowser.openBrowserAsync(
-      'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google'
-    );
+    const url = 'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google';
+
+    // 웹 브라우저로 이동
+    await Linking.openURL(url);
+  
+    // 현재 URL 받아오기
+    const currentUrl = await Linking.getInitialURL();
+    console.log('Current URL:', currentUrl);
   };
 
   const getUserToken = async () => {
     try {
       console.log('Fetching user token...');
       const response = await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/login/oauth2/code/oauth2/tok');
-      const userToken = response.data; // Assuming the response contains the userToken string
+      const userToken = response.data; 
       setUserToken(userToken);
       console.log('User token:', userToken);
       return userToken;
@@ -45,17 +54,9 @@ export default function loginScreen() {
     console.log('renderWebView');
     Linking.getInitialURL().then((url) => {
       console.log(url);
+      handleWebViewNavigationStateChange({ url });
     });
-    return (
-      <WebView
-        source={{
-          uri:
-            'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google',
-        }}
-        style={{ marginTop: 10 }}
-        onNavigationStateChange={handleWebViewNavigationStateChange}
-      />
-    );
+    onNavigationStateChange={handleWebViewNavigationStateChange}
   };
 
   return (
@@ -66,14 +67,13 @@ export default function loginScreen() {
       <View style={styles.mentContainer}>
         <Text style={styles.ment}>⚡3초만에 시작하기</Text>
       </View>
-      <TouchableOpacity style={styles.googleButton} >
+      <TouchableOpacity style={styles.googleButton} onPress={handleGoogleButtonPress}>
         <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
       </TouchableOpacity>
-      {renderWebView()}
-      
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
