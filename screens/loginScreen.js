@@ -4,14 +4,25 @@ import { WebView}  from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
 import axios from 'axios';
 import * as Linking from 'expo-linking';
-
+import * as Google from 'expo-auth-session/providers/google';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function loginScreen() {
   const [userToken, setUserToken] = useState('');
 
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId: '338399356732-jkutfv9gkjis5736g4erm7f6p0kfq2rj.apps.googleusercontent.com',
+    androidClientId: '338399356732-s49643q71p8tu3jccm9r5im6dmenl58k.apps.googleusercontent.com',
+    iosClientId: '338399356732-8u0f78vqv5r8mp12gl3l5vtte3ig8jf2.apps.googleusercontent.com',
+  });
 
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const { authentication } = response;
+    }
+  }, [response]);
 
   const handleGoogleButtonPress = async () => {
     const url = 'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/oauth2/authorization/google';
@@ -67,9 +78,16 @@ export default function loginScreen() {
       <View style={styles.mentContainer}>
         <Text style={styles.ment}>⚡3초만에 시작하기</Text>
       </View>
-      <TouchableOpacity style={styles.googleButton} onPress={handleGoogleButtonPress}>
+      <Button 
+        disabled={!request}
+        title = "Google Login"
+        onPress={()=> {
+          promptAsync();
+        }}
+        />
+      {/*<TouchableOpacity style={styles.googleButton} onPress={handleGoogleButtonPress}>
         <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
-      </TouchableOpacity>
+      </TouchableOpacity>*/}
     </View>
   );
 }
