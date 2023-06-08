@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     marginTop: -90,
-    fontFamily: 'Inter',
+    // fontFamily: 'Inter',
     fontSize: 25,
     fontWeight: '900',
     lineHeight: 27,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   currencySymbol: {
-    fontFamily: 'Inter',
+    // fontFamily: 'Inter',
     fontSize: 16,
     fontWeight: '900',
     lineHeight: 21,
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontFamily: 'Inter',
+    // fontFamily: 'Inter',
     fontSize: 16,
     fontWeight: '900',
     lineHeight: 21,
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   laterButtonText: {
-    fontFamily: 'Inter',
+    // fontFamily: 'Inter',
     fontSize: 16,
     fontWeight: '900',
     lineHeight: 19,
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     color: '#4974A5',
   },
   addButtonText: {
-    fontFamily: 'Inter',
+    // fontFamily: 'Inter',
     fontSize: 16,
     fontWeight: '900',
     lineHeight: 19,

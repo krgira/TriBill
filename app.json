@@ -6,11 +6,12 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "com.capstone.TriBill",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff",
-      "expoClientId": "338399356732-jkutfv9gkjis5736g4erm7f6p0kfq2rj.apps.googleusercontent.com"
+      "expoClientId": "338399356732-aj4999ugrtv7ktrfnlt8mff0ki9ruh5m.apps.googleusercontent.com"
     },
     "assetBundlePatterns": [
       "**/*"

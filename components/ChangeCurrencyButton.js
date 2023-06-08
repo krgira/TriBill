@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, FlatList, Modal,TouchableWithoutFeedback, Keyboard,KeyboardAvoidingView  } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimensions, FlatList, Modal,TouchableWithoutFeedback, Keyboard,KeyboardAvoidingView  } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
@@ -12,43 +12,49 @@ function ChangeCurrencyButton() {
   const [usdAmount, setUsdAmount] = useState(0);
   const [exchangeRate, setExchangeRate] = useState(0);
   const [activeButton, setActiveButton] = useState('krw');
+  const [currencyList, setCurrencyList] = useState([]);
   const [showCurrencyList, setShowCurrencyList] = useState(false);
-  const [selectedCurrency, setSelectedCurrency] = useState('');
-  const [isListExpanded, setListExpanded] = useState(false);
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [budget, setBudget] = React.useState('');
-  const [buttonContainerStyle, setButtonContainerStyle] = useState(styles.buttonContainer);
-  const [amount, setAmount] = useState('');
+  const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [budget, setBudget] = useState('');
+  const inputRef = useRef(null);
+  const [buttonContainerStyle, setButtonContainerStyle] = useState(styles.modalContent);
 
-const fetchExchangeRate = async () => { //get으로 환율 받아오기
-  
-  try {
-  const response = await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=USD', {
+  const fetchExchangeRate = async (selectedCurrency) => {
+    try {
+      const response = await axios.get(`http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=${selectedCurrency}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
       });
-
-    console.log(response);
-
-    const data = response.data;
-    const currencyKeys = data.nation; 
-    const exchangeRate = data.rate;
-
-    console.log(currencyKeys);
-    console.log(exchangeRate);
-
-    setExchangeRate(exchangeRate);
-    }
-    catch(error){
+      const data = response.data;
+      const currencyKeys = data.nation;
+      const exchangeRate = data.rate;
+  
+      console.log(currencyKeys);
+      console.log(exchangeRate);
+  
+      setExchangeRate(exchangeRate);
+    } catch (error) {
       console.log('환율을 가져오는 중 오류 발생:', error);
-    };
-};
-
+    }
+  };
+  
 useEffect(() => {
-  fetchExchangeRate();
+  fetchExchangeRate(selectedCurrency);
+  
 }, []);
+useEffect(() => {
+  if (selectedCurrency !== 'krw') {
+    setKrwAmount((1 / exchangeRate).toFixed(6));
+    setUsdAmount(`1 (${exchangeRate})`);
+    setActiveButton('USD');
+    setShowCurrencyList(!showCurrencyList);
+    createList();
+  }
+  
+}, [exchangeRate]);
 
 const formatCurrency = (value) => { // 0이하면 소수점 여섯째 자리까지, 1이상이면 소수점 둘째 자리까지 
   if (typeof value !== 'number') {
@@ -70,44 +76,22 @@ const formatCurrency = (value) => { // 0이하면 소수점 여섯째 자리까�
   }
 };
 
-  const handleButtonPress = (buttonName) => { // 각각 버튼 눌렀을 때 기능
-    console.log('hi');
+const handleButtonPress = async (buttonName) => {
+  if (buttonName === 'krw') {
+    setActiveButton('krw');
+    setKrwAmount(1);
+    setUsdAmount((1 * exchangeRate).toFixed(6)); 
+    setShowCurrencyList(false);
+  } else {
+    setSelectedCurrency(buttonName);
+    await fetchExchangeRate(buttonName);
     
-    if (buttonName === 'krw') {
-      fetchExchangeRate();
-      setActiveButton('krw');
-      setKrwAmount(1);
-      setUsdAmount((1 * exchangeRate).toFixed(6)); // 
-      // setListExpanded(false);
-      setShowCurrencyList(false);
-    } else if (buttonName === 'usd') {
-      fetchExchangeRate();
-      setActiveButton('usd');
-      setUsdAmount(1);
-      setKrwAmount((1 / exchangeRate).toFixed(6));
-      // setListExpanded(!isListExpanded);
-      setShowCurrencyList(!showCurrencyList);
-    }
-
-    sendButtonNameToServer(buttonName);
-  };
-
-  const renderCurrencyItem = (buttonName) => ( //화폐선택항목 리스트에서 각각
-  <TouchableOpacity style={styles.currencyItem} onPress={() => handleButtonPress(buttonName)}>
-    <Text style={styles.currencyText}>{buttonName}</Text>
-  </TouchableOpacity>
-);
-
-  const sendButtonNameToServer = async (buttonName) => {
-  try {
-    const response = axios.post('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=USD', { buttonName })
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
   }
 };
 
-const currencyList = [
+const createList =  () => {
+  
+  const newList =[
   {"buttonName": "USD"},
   {"buttonName": "EUR"},
   {"buttonName": "JPY"},
@@ -218,95 +202,74 @@ const currencyList = [
   {"buttonName": "ISK"},
   {"buttonName": "HTG"}
 ];
-
-  // const handleCurrencySelect = (currency) => { //여기부분 지울수도
-  //   setSelectedCurrency(currency);
-  //   setListExpanded(false);
-  //   setShowCurrencyList(false);
-
-  //   if (activeButton === 'krw') {
-  //     setUsdAmount(1);
-  //     setKrwAmount((1 / exchangeRate[currency]).toFixed(6));
-  //   } else if (activeButton === 'usd') {
-  //     setKrwAmount(1);
-  //     setUsdAmount((1 * exchangeRate[currency]).toFixed(6));
-  //   }
-  // };//여기까지
+  setCurrencyList(newList);
+}
 
   //여기 아래부터는 환율 알림 버튼 
 
-//   const handleIconPress = () => {
-    
-//     setModalVisible(true);
+  const handleIconPress = () => {
+    setModalVisible(true);
+  };
 
-//   };
-//   const closeModal = () => {
-//   setModalVisible(false);
-// };
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
+  const handleTextInputFocus = () => {
+    inputRef.current.focus();
+  };
 
-// const handleTextInputFocus = () => {
-//     inputRef.current.focus();
-//   };
-//     const handleTextChange = (value) => {
-//     const numericValue = value.replace(/[^0-9]/g, '');
-//     setBudget(numericValue);
-//   };
+  const handleTextChange = (value) => {
+    const numericValue = value.replace(/[^0-9]/g, '');
+    setBudget(numericValue);
+  };
 
-//   const handleContainerPress = () => {
-//     Keyboard.dismiss();
-//   };
+  const handleContainerPress = () => {
+    Keyboard.dismiss();
+  };
 
-//   const handleAddButtonPress = () => {//여기부터 지울수도
-//   const formattedAmount = parseFloat(amount);
-//   const data = {
-//     currency: selectedCurrency,
-//     amount: formattedAmount
-//   };
+  const handleAddButtonPress = () => {
+    const formattedAmount = parseFloat(budget);
+    const data = {
+      currency: selectedCurrency,
+      amount: formattedAmount
+    };
+  
+  };
 
-//   axios.post('http://ec2-52-79-233-82.ap-northeast-2.compute.amazonaws.com:8001/api/currency/v1?Nation=USD', data)
-//     .then(response => {
-//       console.log('서버 응답:', response.data);
-//     })
-//     .catch(error => {
-//       console.error('서버 요청 오류:', error);
-//     });
-// }; //여기부분 지울수도
+  // useEffect(() => {
+  //   Keyboard.addListener('keyboardWillShow', handleKeyboardWillShow);
+  //   Keyboard.addListener('keyboardWillHide', handleKeyboardWillHide);
 
-//     React.useEffect(() => {
-//     Keyboard.addListener('keyboardWillShow', handleKeyboardWillShow);
-//     Keyboard.addListener('keyboardWillHide', handleKeyboardWillHide);
+  //   return () => {
+  //     Keyboard.removeListener('keyboardWillShow', handleKeyboardWillShow);
+  //     Keyboard.removeListener('keyboardWillHide', handleKeyboardWillHide);
+  //   };
+  // }, []);
 
-//     return () => {
-//       Keyboard.removeListener('keyboardWillShow', handleKeyboardWillShow);
-//       Keyboard.removeListener('keyboardWillHide', handleKeyboardWillHide);
-//     };
-//   }, []);
-// const handleKeyboardWillShow = () => {
-//   setButtonContainerStyle({...styles.buttonContainer, top: 150});
-// };
+  // const handleKeyboardWillShow = () => {
+  //   setButtonContainerStyle({ ...styles.modalContent, top: 150 });
+  // };
 
-// const handleKeyboardWillHide = () => {
-//   setButtonContainerStyle(styles.buttonContainer);
-// };
-
-
-//  const inputRef = React.useRef(null);
+  // const handleKeyboardWillHide = () => {
+  //   setButtonContainerStyle(styles.modalContent);
+  // };
+ //여기까지
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity //krw버튼
+        <View //krw버튼
           style={[
             styles.button,
             styles.centerButton,
             activeButton === 'krw' ? { backgroundColor: '#99B7DB' } : null
           ]}
-          onPress={() => handleButtonPress('krw')}
+           onPress={() => handleButtonPress('krw')}
         >
           <Text style={styles.buttonText}>KRW</Text>
           <Text style={styles.buttonAmount}>{formatCurrency(krwAmount)}</Text>
-        </TouchableOpacity>
+        </View>
         
         {/* 양방향 화살표 */}
         <View style={[styles.sortIcon, { top: 20, left: 175 }]}>
@@ -320,84 +283,81 @@ const currencyList = [
             styles.auxiliaryButton,
             styles.reduceGap,
             styles.centerButton,
-            activeButton === 'usd' ? { backgroundColor: '#99B7DB' } : null
+            activeButton === 'USD' ? { backgroundColor: '#99B7DB' } : null
           ]}
           onPress={() => {
-            handleButtonPress('usd');
+            // handleButtonPress('USD');
+            setActiveButton('USD');
+            createList;
             setShowCurrencyList(!showCurrencyList);
           }}
         >
           <Text style={[styles.buttonText, styles.auxiliaryButtonText]}>
             {selectedCurrency !== '' ? selectedCurrency : 'USD'}
           </Text>
-          <Text style={styles.buttonAmount}>{formatCurrency(usdAmount)}</Text>
+          <Text style={styles.buttonAmount}>{(usdAmount)}</Text>
         </TouchableOpacity>
 
-        <FlatList
-            data={currencyList.buttonName}
-            renderItem={renderCurrencyItem}
-            style={styles.currencyList}
-            numColumns={1}
-          />
+        {/* currencyList 표시 */}
+      {showCurrencyList && (
+        <ScrollView style={styles.currencyList}>
+          {currencyList.map((currency, index) => (
+          <TouchableOpacity
+            key={index} 
+            style={styles.currencyItem} 
+            onPress={() => {handleButtonPress(currency.buttonName); }}>
+              <Text style={styles.currencyText}>{currency.buttonName}</Text>
+          </TouchableOpacity>
+          ))}
+        </ScrollView>
+      )}
+
         
         {/* 환율알림버튼시작 */}
- {/*
-        <View style={[styles.sortIcon, { position: 'absolute', bottom: 20, right: 20 }]}>
-        <View style={styles.bellButtonContainer}>
-                <View style={[styles.sortIcon, { position: 'absolute', bottom: 20, right: 20 }]}>
-  <TouchableOpacity onPress={handleIconPress} style={styles.bellButton}>
-    <Ionicons name="md-notifications" size={24} color="#4974A5" />
-  </TouchableOpacity>
-</View> 
-</View>
- <View> 
-      <TouchableOpacity onPress={handleIconPress}> 
-      </TouchableOpacity>
-    <Modal visible={isModalVisible} animationType="slide" transparent={true}>
-      <TouchableOpacity
-        activeOpacity={1}
-        style={styles.modalContainer}
-        onPress={closeModal}
-      >
-      <TouchableWithoutFeedback>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalText}>알림 받을 환율을 설정하십시오</Text>
-<Text style={styles.modalSecondText}>설정한 환율 이하로 내려갈 경우
-알림을 보내드려요 </Text>
-
-<KeyboardAvoidingView style={styles.container} behavior="padding">
-          <View style={styles.popupBox}>
-          <TextInput
-            ref={inputRef}
-            style={styles.input}
-            placeholder="환율을 입력해주세요"
-            keyboardType="numeric"
-            onFocus={handleTextInputFocus}
-           onChangeText={setAmount}
-             value={amount}
-          />
-          
-          </View>
-          </KeyboardAvoidingView>
-          
-          <View style={styles.boxContainer}>
-          <TouchableOpacity style={styles.leftbox} onPress={closeModal}>
-           <Text style={styles.leftboxText}>취소</Text>
-           </TouchableOpacity>
-           <TouchableOpacity style={styles.rightbox} onPress={() => {
-  handleAddButtonPress();
-  closeModal();
-}}>
-           <Text style={styles.rightboxText}>설정</Text>
-           </TouchableOpacity>
-          </View>
-        </View>
- </TouchableWithoutFeedback>
-      </TouchableOpacity>
+        <View>
+      {/* Your existing UI components */}
+      
+      <View style={[styles.sortIcon, { position: 'absolute', bottom: 20, right: 20 }]}>
+        <TouchableOpacity onPress={handleIconPress} style={styles.bellButton}>
+          <Ionicons name="md-notifications" size={24} color="#4974A5" />
+        </TouchableOpacity>
+      </View>
+      
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <TouchableOpacity activeOpacity={1} style={styles.modalContainer} onPress={closeModal}>
+          <TouchableWithoutFeedback>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>알림 받을 환율을 설정하십시오</Text>
+              <Text style={styles.modalSecondText}>설정한 환율 이하로 내려갈 경우 알림을 보내드려요</Text>
+              <KeyboardAvoidingView style={styles.container} behavior="padding">
+                <View style={styles.popupBox}>
+                  <TextInput
+                    ref={inputRef}
+                    style={styles.input}
+                    placeholder="환율을 입력해주세요"
+                    keyboardType="numeric"
+                    onFocus={handleTextInputFocus}
+                    onChangeText={handleTextChange}
+                    value={budget}
+                  />
+                </View>
+              </KeyboardAvoidingView>
+              <View style={styles.boxContainer}>
+                <TouchableOpacity style={styles.leftbox} onPress={closeModal}>
+                  <Text style={styles.leftboxText}>취소</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.rightbox} onPress={() => {
+                  handleAddButtonPress();
+                  closeModal();
+                }}>
+                  <Text style={styles.rightboxText}>설정</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </TouchableOpacity>
       </Modal>
-    </View> 
-    
-        </View>*/ }
+    </View>
         {/* 환율버튼알림 끝 */}
         
       </View>
@@ -442,6 +402,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   auxiliaryButton: {
+    left:20,
     backgroundColor: '#fff',
     width: 140,
     height: 60,
@@ -491,6 +452,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333333',
   },
+
+  // 환율알림버튼 시작
   bellButtonContainer: {
     position: 'absolute',
    top: 10,
@@ -630,3 +593,5 @@ modalSecondText: {
 
 
 export default ChangeCurrencyButton;
+
+

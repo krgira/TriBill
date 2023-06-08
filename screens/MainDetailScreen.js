@@ -52,7 +52,7 @@ async function fetchData() {
 */
 
 
-export default function MainDetailScreen() {
+export default function App() {
   const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NTg4NjkyOSwiZW1haWwiOiIzNzMyOGRlZC04OGE0LTQ0MjQtYWZhYS0zNWJmMDkzZWUxZDBAc29jaWFsVXNlci5jb20ifQ.NrwnqemT5qtLWUqUwSbTZc4zxJ6Jb_wSpXgB3Jy4RoAmPgiBlDcYtNU0C2HdNqLteedsaFQ43azaskuRL5DEQg";
 
   const fetchData = async () => {
@@ -69,7 +69,7 @@ export default function MainDetailScreen() {
       if (response.status === 200) {
         const data = response.data;
         const members = data.member;
-        const exchangeRateMap = data.exchangeRate;
+        const exchangeRateMap = data.exchangeRate; 
   
         // Convert the exchangeRate Map to an array of key-value pairs
         const exchangeRateArray = Object.keys(exchangeRateMap);
