@@ -220,7 +220,7 @@ const createList =  () => {
   };
 
   const handleTextChange = (value) => {
-    const numericValue = value.replace(/[^0-9]/g, '');
+    const numericValue = value.replace(/[^0-9.]/g, '');
     setBudget(numericValue);
   };
 
@@ -234,6 +234,7 @@ const createList =  () => {
       currency: selectedCurrency,
       amount: formattedAmount
     };
+    console.log(data.currency, data.amount);
   
   };
 
@@ -258,7 +259,7 @@ const createList =  () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonsContainer}>
+      <View style={styles.conversionButtonContainer}>
         <View //krw버튼
           style={[
             styles.button,
@@ -311,12 +312,12 @@ const createList =  () => {
           ))}
         </ScrollView>
       )}
+       </View>
 
-        
-        {/* 환율알림버튼시작 */}
+
+ {/* 환율알림버튼시작 */}
+       <View style={styles.notificationButtonContainer}>
         <View>
-      {/* Your existing UI components */}
-      
       <View style={[styles.sortIcon, { position: 'absolute', bottom: 20, right: 20 }]}>
         <TouchableOpacity onPress={handleIconPress} style={styles.bellButton}>
           <Ionicons name="md-notifications" size={24} color="#4974A5" />
@@ -372,7 +373,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: 'flex-start',
   },
-  buttonsContainer: {
+  conversionButtonContainer: {
+    top:200,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
@@ -402,7 +404,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   auxiliaryButton: {
-    left:20,
     backgroundColor: '#fff',
     width: 140,
     height: 60,
@@ -454,6 +455,11 @@ const styles = StyleSheet.create({
   },
 
   // 환율알림버튼 시작
+  notificationButtonContainer:{
+    position: 'absolute',
+    top: 80,
+   alignSelf: 'flex-end',
+  },
   bellButtonContainer: {
     position: 'absolute',
    top: 10,
