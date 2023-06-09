@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { CalendarList } from 'react-native-calendars';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { eachDayOfInterval, format } from 'date-fns';
+import Constants from 'expo-constants';
 
 const isSameDay = (date1, date2) => {
   const d1 = new Date(date1);
@@ -15,7 +16,7 @@ const isSameDay = (date1, date2) => {
 };
 
 
-function CalendarView() {
+function SetScheduleScreen() {
   const [selectedStartDate, setSelectedStartDate] = useState();
   const [selectedEndDate, setSelectedEndDate] = useState();
 
@@ -92,7 +93,7 @@ const setSchedule = () => {
 };
   return (
     <View style={{flex:1}}>
-      <View style={{flex:5}}>
+      <View style={{flex:20}}>
         <CalendarList
           style={styles.calendar}
           onDayPress={handleDayPress}
@@ -104,9 +105,11 @@ const setSchedule = () => {
           }}
         />
       </View>
-      <TouchableOpacity style={{flex:0.5,}} onPress={setSchedule}>
-        <Text>등록하기</Text>
-      </TouchableOpacity>
+      <TouchableOpacity 
+            style={styles.button}
+            onPress={setSchedule}>
+                <Text style={styles.buttonText}>등록하기</Text>
+        </TouchableOpacity>
     </View>
     
     
@@ -120,6 +123,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "grey",
   },
+  button: {
+    flex: 1,
+    backgroundColor: "#4974A5",
+    paddingHorizontal: 10,
+    paddingVertical: 18,
+    borderRadius: 10,
+  },
+  buttonText: {
+      color: "white",
+      fontWeight: "bold",
+      textAlign: "center",
+      fontSize: 17,
+  }
 });
 
-export default CalendarView;
+export default SetScheduleScreen;

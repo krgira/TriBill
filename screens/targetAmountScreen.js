@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
-const Field = () => {
+const targetAmountScreen = () => {
   const [budget, setBudget] = React.useState('');
   const [showCurrency, setShowCurrency] = React.useState(false);
   const [buttonContainerStyle, setButtonContainerStyle] = React.useState(styles.buttonContainer);
@@ -171,4 +171,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Field;
+export default targetAmountScreen;
