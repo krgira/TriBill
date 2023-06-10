@@ -3,6 +3,8 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput } from 'r
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import { Dimensions } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const screenWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
@@ -352,7 +354,7 @@ const SetNationScreen = () => {
 
     );
   };
-const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NjM3MzY0NCwiZW1haWwiOiJ0ZXN0ZXIyMzMzM0BuYXZlci5jb20ifQ.pJTCbB00HeWG6kkKGXJYmrE-w_3F0vHuXdVHQLZHtXkHi2FRbSddc4w9ylr4SKBWb-er6lzdZ3ToWwV6MPme1A";
+  const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NjM4MzM0NywiZW1haWwiOiJ0ZXN0ZXIyMzMzM0BuYXZlci5jb20ifQ.1J_KsKKn5FKpTzD0oBbrSjTIc1MsoxGwYwbQ_nvgKWrcqNWr8If5KGJ2tb7i2fCR_-mjb51ApZmTJbivpJbKxw";
   const setNation = () => {
   
     fetch('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/trip/create/nation', {
@@ -374,8 +376,17 @@ const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIs
       })
       .then(data => {
         console.log(data);
-        tripId = data.id; 
-        localStorage.setItem('tripId', tripId)
+        const tripId = data;
+
+        // Save the ID value to AsyncStorage
+        AsyncStorage.setItem('tripId', tripId.toString())
+        .then(() => {
+          console.log('Saved ID:', tripId);
+          // Handle the response data here
+        })
+        .catch(error => {
+          console.error('Error saving ID:', error);
+        });
         // Handle the response data here
       })
       .catch(error => {

@@ -5,6 +5,7 @@ import SetNationScreen from './SetNationScreen';
 import SetScheduleScreen from './SetScheduleScreen';
 import TargetAmountScreen from './TargetAmountScreen';
 import MainTab from './MainTab';
+import MainScreen from './MainScreen';
 import MainDetailScreen from './MainDetailScreen';
 import MainUpdateScreen from './MainUpdateScreen';
 
@@ -33,11 +34,6 @@ function RootStack() {
         component={MainTab}
         options={{headerShown: false}}  // 헤더 중첩을 막기 위함
       />
-      <Stack.Screen 
-        name="MainDetail" 
-        component={MainDetailScreen}
-        //options={{headerShown: false}} 
-        />
       <Stack.Screen 
         name="MainUpdate" 
         component={MainUpdateScreen}

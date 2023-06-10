@@ -2,12 +2,11 @@ import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 
 
-export default function SettingScreen({ userInfo }) {
+export default function SettingScreen() {
  
   return (
     <View style={styles.container}>
-      <Text style={styles.userName}>{userInfo.name}</Text>
-      <Text style={styles.userEmail}>{userInfo.email}</Text>
+      
     </View>
   );
 }

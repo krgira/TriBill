@@ -52,8 +52,8 @@ async function fetchData() {
 */
 
 
-export default function App() {
-  const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NTg4NjkyOSwiZW1haWwiOiIzNzMyOGRlZC04OGE0LTQ0MjQtYWZhYS0zNWJmMDkzZWUxZDBAc29jaWFsVXNlci5jb20ifQ.NrwnqemT5qtLWUqUwSbTZc4zxJ6Jb_wSpXgB3Jy4RoAmPgiBlDcYtNU0C2HdNqLteedsaFQ43azaskuRL5DEQg";
+export default function MainDetailScreen() {
+  const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NjQwNzA3NywiZW1haWwiOiJ0ZXN0ZXIyMzMzM0BuYXZlci5jb20ifQ.Lj1b2HrP_foeLvoXet_X6ds3Yy4K-8mRSLMEWoB4qeGyALaB8q-a9BzQcB3a2Nqu5fKzxipxL-O2E0ByQVv_ww";
 
   const fetchData = async () => {
     try {

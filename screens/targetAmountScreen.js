@@ -1,10 +1,14 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 function TargetAmountScreen() {
   const [budget, setBudget] = React.useState('');
   const [showCurrency, setShowCurrency] = React.useState(false);
   const [buttonContainerStyle, setButtonContainerStyle] = React.useState(styles.buttonContainer);
+  const navigation = useNavigation();
 
   const handleTextInputFocus = () => {
     inputRef.current.focus();
@@ -22,55 +26,51 @@ function TargetAmountScreen() {
 
   const handleAddButtonPress = () => {
     setTarget();
-    const formattedBudget = `₩${budget}`;
-    console.log(formattedBudget);
-  };
-
-  React.useEffect(() => {
-    Keyboard.addListener('keyboardWillShow', handleKeyboardWillShow);
-    Keyboard.addListener('keyboardWillHide', handleKeyboardWillHide);
-
-    // Clean up listeners
-    return () => {
-      Keyboard.removeAllListeners('keyboardWillShow', handleKeyboardWillShow);
-      Keyboard.removeAllListeners('keyboardWillHide', handleKeyboardWillHide);
-    };
-  }, []);
-
-  const handleKeyboardWillShow = () => {
-    setButtonContainerStyle({...styles.buttonContainer, top: 150});
-  };
-
-  const handleKeyboardWillHide = () => {
-    setButtonContainerStyle(styles.buttonContainer);
+    navigation.navigate("MainTab");
   };
 
   const inputRef = React.useRef(null);
 
   console.log("budget: " + budget);
-  const amount = parseInt(budget, 10);
-  console.log("amount: "+amount);
+  const amount = parseFloat(budget);
+  console.log("amount: " + amount);
 
-  const setTarget = () => {
-    fetch('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/trip/9/create/amount', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        amount: amount,
-      }),
+  AsyncStorage.getItem('tripId')
+  .then(tripIdString => {
+    if (tripIdString !== null) {
+      const tripId = parseInt(tripIdString, 10);
+      console.log('Retrieved ID:', tripId);
+
+      setTarget(tripId); // Call setTarget() with the tripId value
+    } else {
+      // Handle the case when tripId is not found in AsyncStorage
+      console.log('Trip ID not found in AsyncStorage');
+    }
+  })
+  .catch(error => {
+    console.error('Error retrieving trip ID:', error);
+  });
+
+const setTarget = (tripId) => {
+  axios.post(`http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/trip/${tripId}/create/amount`, {
+    amount: amount,
+  }, {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(response => {
+      const data = response.data;
+      console.log(data);
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    console.log("fetch end");
-  };
+    .catch(error => {
+      console.error('Error setting target:', error);
+    });
+
+  console.log("Fetch end");
+};
+
 
   return (
     <TouchableWithoutFeedback onPress={handleContainerPress}>

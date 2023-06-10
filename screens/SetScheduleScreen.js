@@ -3,7 +3,8 @@ import { CalendarList } from 'react-native-calendars';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { eachDayOfInterval, format } from 'date-fns';
 import { useNavigation } from '@react-navigation/native';
-import Constants from 'expo-constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const isSameDay = (date1, date2) => {
   const d1 = new Date(date1);
@@ -70,7 +71,22 @@ const renderFilledDates = () => {
   return markedDates;
 };
 
-  const setSchedule = () => {
+  // Retrieve the savedId value from AsyncStorage
+  AsyncStorage.getItem('tripId')
+  .then(tripIdString => {
+    if (tripIdString !== null) {
+      const tripId = parseInt(tripIdString, 10);
+      console.log('Retrieved ID:', tripId);
+      // Use the savedId value as needed in the other screen
+    } else {
+      // Handle the case when savedId is not found in AsyncStorage
+    }
+  })
+  .catch(error => {
+    console.error('Error retrieving ID:', error);
+  });
+
+  const setSchedule = (tripId) => {
     fetch(`http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/trip/${tripId}/create/date`, {
       method: 'POST',
       headers: {
