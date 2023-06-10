@@ -5,13 +5,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import RootStack from './screens/RootStack';
 import { LogContextProvider } from './contexts/LogContext';
 import LoginTestScreen from './screens/loginTestScreen';
+import MapScreen from './screens/MapScreen';
 
 const App = () => {
   return (
-    <NavigationContainer>
-        <RootStack />
-    </NavigationContainer>
+    // <NavigationContainer>
+    //     <RootStack />
+    // </NavigationContainer>
       //<LoginTestScreen />
+    <MapScreen/>
   );
 };
 
