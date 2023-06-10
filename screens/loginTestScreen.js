@@ -4,7 +4,8 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import { Button, Image, Text, View, StyleSheet,TouchableOpacity,PixelRatio } from 'react-native';
 import axios from 'axios';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import MapScreen from './MapScreen';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -12,6 +13,7 @@ export default function App() {
   const [accessToken,setAccessToken] = React.useState();
   const [userInfo,setUserInfo] = React.useState();
   const [message,setMessage] = React.useState();
+  const [jwtToken, setJwtToken] = React.useState();
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: '338399356732-aj4999ugrtv7ktrfnlt8mff0ki9ruh5m.apps.googleusercontent.com',
@@ -35,9 +37,15 @@ export default function App() {
       const response = await axios.post('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/sign-up', dataToSend);
   
       const jwtToken = response.data.token;
+      await AsyncStorage.multiSet([
+        ['jwtToken', jwtToken],
+        ['userInfo.name', userInfo.name]
+      ]);
+
       // 서버로부터의 응답 처리
       console.log('sendUserDataToServerSuccess',accessToken,dataToSend);
       console.log(jwtToken);
+      setJwtToken(jwtToken);
     } catch (error) {
       // 오류 처리
       console.error(error);
@@ -84,6 +92,7 @@ export default function App() {
   <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
     </TouchableOpacity>
     <StatusBar />
+    {jwtToken && <MapScreen jwtToken={jwtToken} />} 
   </View>
   );
 }

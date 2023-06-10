@@ -18,14 +18,23 @@
     ],
     "ios": {
       "bundleIdentifier": "com.capstone.TriBill",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyAu8coMAISghchg8np9_2uQRtPItMtdLW4"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.capstone.TriBill"
+      "package": "com.capstone.TriBill",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCNdWCc6u5zfwo87IsBd161NNnG9SxvAIQ"
+        }
+      }
+      
     },
     "web": {
       "favicon": "./assets/favicon.png"
