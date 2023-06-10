@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { CalendarList } from 'react-native-calendars';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { eachDayOfInterval, format } from 'date-fns';
+import { useNavigation } from '@react-navigation/native';
 import Constants from 'expo-constants';
 
 const isSameDay = (date1, date2) => {
@@ -17,6 +18,7 @@ const isSameDay = (date1, date2) => {
 
 
 function SetScheduleScreen() {
+  const navigation = useNavigation();
   const [selectedStartDate, setSelectedStartDate] = useState();
   const [selectedEndDate, setSelectedEndDate] = useState();
 
@@ -68,29 +70,35 @@ const renderFilledDates = () => {
   return markedDates;
 };
 
-const setSchedule = () => {
-  fetch('http://172.30.1.16:8080/test/calendar', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      startDate: selectedStartDate,
-      endDate: selectedEndDate,
-    }),
-  })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      console.log("start date:", data.startDate);
-      console.log("end date:", data.endDate);
+  const setSchedule = () => {
+    fetch(`http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/trip/${tripId}/create/date`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        startDate: selectedStartDate,
+        endDate: selectedEndDate,
+      }),
     })
-    .catch(error => {
-      console.error(error);
-    });
-  console.log("fetch end");
-};
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        console.log("start date:", data.startDate);
+        console.log("end date:", data.endDate);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    console.log("fetch end");
+  };
+
+  const onPress = () => {
+    setSchedule();
+    navigation.navigate("TargetAmount");
+  };
+
   return (
     <View style={{flex:1}}>
       <View style={{flex:20}}>
@@ -107,7 +115,7 @@ const setSchedule = () => {
       </View>
       <TouchableOpacity 
             style={styles.button}
-            onPress={setSchedule}>
+            onPress={onPress}>
                 <Text style={styles.buttonText}>등록하기</Text>
         </TouchableOpacity>
     </View>

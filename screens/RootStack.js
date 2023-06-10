@@ -1,9 +1,9 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import setNationScreen from './setNationScreen';
+import SetNationScreen from './SetNationScreen';
 import SetScheduleScreen from './SetScheduleScreen';
-import targetAmountScreen from './targetAmountScreen';
+import TargetAmountScreen from './TargetAmountScreen';
 import MainTab from './MainTab';
 import MainDetailScreen from './MainDetailScreen';
 import MainUpdateScreen from './MainUpdateScreen';
@@ -14,8 +14,8 @@ function RootStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="setNation"
-        component={setNationScreen}
+        name="SetNation"
+        component={SetNationScreen}
         options={{headerShown: false}}  // 헤더 중첩을 막기 위함
       />
       <Stack.Screen
@@ -24,8 +24,8 @@ function RootStack() {
         //options={{headerShown: false}}  // 헤더 중첩을 막기 위함
       />
       <Stack.Screen
-        name="targetAmount"
-        component={targetAmountScreen}
+        name="TargetAmount"
+        component={TargetAmountScreen}
         //options={{headerShown: false}}  // 헤더 중첩을 막기 위함
       />
       <Stack.Screen

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
-const targetAmountScreen = () => {
+function TargetAmountScreen() {
   const [budget, setBudget] = React.useState('');
   const [showCurrency, setShowCurrency] = React.useState(false);
   const [buttonContainerStyle, setButtonContainerStyle] = React.useState(styles.buttonContainer);
@@ -21,6 +21,7 @@ const targetAmountScreen = () => {
   };
 
   const handleAddButtonPress = () => {
+    setTarget();
     const formattedBudget = `₩${budget}`;
     console.log(formattedBudget);
   };
@@ -31,8 +32,8 @@ const targetAmountScreen = () => {
 
     // Clean up listeners
     return () => {
-      Keyboard.removeListener('keyboardWillShow', handleKeyboardWillShow);
-      Keyboard.removeListener('keyboardWillHide', handleKeyboardWillHide);
+      Keyboard.removeAllListeners('keyboardWillShow', handleKeyboardWillShow);
+      Keyboard.removeAllListeners('keyboardWillHide', handleKeyboardWillHide);
     };
   }, []);
 
@@ -45,6 +46,31 @@ const targetAmountScreen = () => {
   };
 
   const inputRef = React.useRef(null);
+
+  console.log("budget: " + budget);
+  const amount = parseInt(budget, 10);
+  console.log("amount: "+amount);
+
+  const setTarget = () => {
+    fetch('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/trip/9/create/amount', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amount: amount,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    console.log("fetch end");
+  };
 
   return (
     <TouchableWithoutFeedback onPress={handleContainerPress}>
@@ -171,4 +197,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default targetAmountScreen;
+export default TargetAmountScreen;

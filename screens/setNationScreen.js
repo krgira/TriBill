@@ -11,14 +11,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 18,
     borderRadius: 10,
-    
-},
-buttonText: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 17,
-},
+    width: 359,
+    alignItems: 'center',
+    height: 100,
+  },
+  buttonText: {
+      color: "white",
+      fontWeight: "bold",
+      textAlign: "center",
+      fontSize: 17,
+  },
   countryBox: {
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -85,7 +87,7 @@ buttonText: {
 
 
 
-const setNationScreen = () => {
+const SetNationScreen = () => {
   const [favoriteCountries, setFavoriteCountries] = useState([]);
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [selectedNations, setSelectedNations] = useState([]);
@@ -96,7 +98,6 @@ const setNationScreen = () => {
     { currencyType: "GMD", id: 3, name: "감비아", emoji: "🇬🇲" },
     { currencyType: "GYD", id: 4, name: "가이아나", emoji: "🇬🇾" },
     { currencyType: "GGP", id: 5, name: "건지 섬", emoji: "🇬🇬" },
-    { currencyType: "XDR", id: 6, name: "국제통화기금", emoji: "💰" },
     { currencyType: "GRC", id: 7, name: "그리스", emoji: "🇬🇷" },
     { currencyType: "GTQ", id: 8, name: "과테말라", emoji: "🇬🇹" },
     { currencyType: "ANG", id: 9, name: "네덜란드령 안틸레스", emoji: "🇳🇱" },
@@ -173,7 +174,6 @@ const setNationScreen = () => {
     { id: 80, currencyType: "SYP", name: "시리아", emoji: "🇸🇾" },
     { id: 81, currencyType: "SOS", name: "소말리아", emoji: "🇸🇴" },
     { id: 82, currencyType: "WST", name: "사모아", emoji: "🇼🇸" },
-    { id: 83, currencyType: "XOF", name: "서부 아프리카", emoji: "🌍" },
     { id: 84, currencyType: "SEK", name: "스웨덴", emoji: "🇸🇪" },
     { id: 85, currencyType: "SAR", name: "사우디아라비아", emoji: "🇸🇦" },
     { id: 86, currencyType: "SLE", name: "시에라리온", emoji: "🇸🇱" },
@@ -284,7 +284,7 @@ const setNationScreen = () => {
     });
   };
   //console.log(selectedCountries);
-  //console.log(selectedNations);
+  console.log(selectedNations);
 
   const handlePayWithPress = (item) => {
     const isItemSelected = selectedCountries.some((selectedItem) => selectedItem.id === item.id);
@@ -352,27 +352,40 @@ const setNationScreen = () => {
 
     );
   };
-
+const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NjM3MzY0NCwiZW1haWwiOiJ0ZXN0ZXIyMzMzM0BuYXZlci5jb20ifQ.pJTCbB00HeWG6kkKGXJYmrE-w_3F0vHuXdVHQLZHtXkHi2FRbSddc4w9ylr4SKBWb-er6lzdZ3ToWwV6MPme1A";
   const setNation = () => {
-    fetch('http://172.30.1.16:8080/test/calendar', {
+  
+    fetch('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/trip/create/nation', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({
         nations: selectedNations,
       }),
     })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
       .then(data => {
         console.log(data);
+        tripId = data.id; 
+        localStorage.setItem('tripId', tripId)
+        // Handle the response data here
       })
       .catch(error => {
         console.error(error);
+        // Handle any error that occurred during the fetch request
       });
+  
     console.log("fetch end");
   };
+  
 
   const onPress = () => {
     setNation();
@@ -400,11 +413,11 @@ const setNationScreen = () => {
           <TouchableOpacity 
               style={styles.button}
               onPress={onPress}>
-                  <Text style={styles.buttonText}>새 가계부 등록하기</Text>
+                  <Text style={styles.buttonText}>국가 등록하기</Text>
           </TouchableOpacity>
         </View>
     </View>
   );
 };
 
-export default setNationScreen;
+export default SetNationScreen;
