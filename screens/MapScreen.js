@@ -9,11 +9,11 @@ const MapScreen = () => {
   const KOREA_LATITUDE = 37.5665; // 대한민국 위도
   const KOREA_LONGITUDE = 126.9780; // 대한민국 경도
   const ZOOM_LEVEL = 70; // 확대 정도 조절
-  const [location, setLocation] = useState(null);
-  // const [country, setCountry] = useState('한국'); 
   const GOOGLE_MAPS_API_KEY = 'AIzaSyD9zR2OmIdJG31qTIVjzMt54Fa64Tcy-Fs'; // Google Maps Geocoding API 키
   const COUNTRY_TRANSLATION_API_KEY = 'AIzaSyAb3_RJOHfh0awr5qu_tIHAoZKoc8K5x5A'; // 국가 이름 변환 API 키
   const [locations, setLocations] = React.useState([]);
+  const [nationsFromServer, setNationFromServer] = React.useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   async function fetchData() {
     try {
@@ -26,7 +26,14 @@ const MapScreen = () => {
         },
       });
   
-      const nationsFromServer = response.data.nations;
+      setNationFromServer(response.data.nations);
+      const data = response.data;
+      const id = data.id;
+      const title = data.title;
+      const startDate = data.startDate;
+      const endDate = data.endDate;
+      console.log(id, title, startDate, endDate);
+
       console.log(nationsFromServer);
       const newLocations = [];
 
@@ -64,13 +71,39 @@ const MapScreen = () => {
     console.error('Error fetching nations:', error);
   }
 }
+
   
   useEffect(() => {
     fetchData();
   }, []);
-  
-  
 
+
+//   const handleMarkerPress = async (countryIndex) => {
+//     const country = nationsFromServer[countryIndex];
+//     setSelectedCountry(country);
+//     console.log('선택한 국가:', country);
+//     const jwtToken = await AsyncStorage.getItem('jwtToken');
+
+//   try {
+//     const response = await axios.get(`http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/report?country=${encodeURIComponent(country)}`, {
+//       headers: {
+//         Authorization: `Bearer ${jwtToken}`,
+//       },
+//     });
+    
+//     const data = response.data;
+//     const id = data.id;
+//     const title = data.title;
+//     const startDate = data.startDate;
+//     const endDate = data.endDate;
+
+//     // 받아온 데이터를 처리하는 로직을 작성합니다.
+//     console.log(id, title, startDate, endDate);
+//   } catch (error) {
+//     console.error('데이터 요청 중 오류 발생:', error);
+//   }
+// };
+  
   return (
     <View style={styles.screen}>
       <MapView
@@ -88,8 +121,9 @@ const MapScreen = () => {
           key={index}
           coordinate={location}
           pinColor="#2D63E2"
-          title="대만"
+          title="나라"
           //description=""
+          onPress={() => handleMarkerPress(index)}
         />
       ))}
 

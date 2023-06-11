@@ -18,8 +18,8 @@ const App = () => {
     </NavigationContainer>
  
 
-    //<LoginTestScreen />
-    //<MapScreen />
+    <LoginTestScreen />
+   //<MapScreen />
     //<SettingScreen/>
     //<AlarmCurrencyButton/>
   );
