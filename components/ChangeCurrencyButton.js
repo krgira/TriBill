@@ -292,11 +292,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   conversionButtonContainer: {
-    top:200,
+    //top:200,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    marginTop: 150,
+    marginTop: '10%',
     marginBottom: 20,
   },
   button: {

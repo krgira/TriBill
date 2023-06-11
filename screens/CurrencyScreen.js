@@ -12,6 +12,19 @@ function CurrencyScreen() {
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [graphData, setGraphData] = useState([]);
   const [graphLabels, setGraphLabels] = useState([]);
+  const [KRWData, setKRWData] = useState([]);
+
+  
+
+  const calculateKrwData = (data) => {
+    const krwData = [];
+    for (let i = 0; i < data.length; i++) {
+      const value = data[i];
+      const krwValue = value !== 0 ? (1 / value).toFixed(2) : 0;
+      krwData.push(krwValue);
+    }
+    return krwData;
+  };
 
   const fetchData = async () => {
     try {
@@ -24,7 +37,7 @@ function CurrencyScreen() {
         }
       );
   
-      console.log(response);
+      //console.log(response);
   
       if (response.status === 200) {
         const data = response.data;
@@ -36,6 +49,8 @@ function CurrencyScreen() {
         // Update state variables with the retrieved data
         setGraphData(graphData);
         setGraphLabels(graphLabels);
+
+        
       } else {
         // Handle error responses
         console.log('Error (response not okay):', response.data);
@@ -48,15 +63,14 @@ function CurrencyScreen() {
 
   useEffect(() => {
     fetchData();
-    // Divide each value in graphData by 1 and save it as krwData
-  }, []);
+  }, [selectedCurrency]);
 
-
+    
     const data = {
-        labels: graphLabels,
+        labels: graphLabels.reverse(),
         datasets: [
           {
-            data: graphData,
+            data:  ["1290.09", "1290.14", "1299.90", "1304.39", "1304.50", "1305.93", "1305.88"].reverse(),
             color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
             strokeWidth: 2
           }
@@ -69,7 +83,7 @@ function CurrencyScreen() {
       <View>
         <AlarmCurrencyButton />
       </View>
-      
+
       <View style={styles.graph}>
         <LineChart
           data={data}
@@ -95,7 +109,7 @@ function CurrencyScreen() {
 
       <View style={styles.currencyButton}>
         <ChangeCurrencyButton />
-      </View>
+      </View>  
     </View>
     
   );
@@ -107,6 +121,7 @@ const styles = StyleSheet.create({
   },
   graph: {
     flex: 1,
+    marginTop: '50%', // Add this line to center the text vertically
   },
   currencyButton: {
     flex: 1,

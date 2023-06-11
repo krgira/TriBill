@@ -2,17 +2,14 @@ import {StatusBar} from 'expo-status-bar';
 import * as React from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-import { Image, Text, View, StyleSheet, TouchableOpacity, PixelRatio } from 'react-native';
+import { Button, Image, Text, View, StyleSheet,TouchableOpacity,PixelRatio } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
-
 import MapScreen from './MapScreen';
 
 WebBrowser.maybeCompleteAuthSession();
 
-export default function LoginTestScreen() {
-  const navigation = useNavigation();
+export default function App() {
   const [accessToken,setAccessToken] = React.useState();
   const [userInfo,setUserInfo] = React.useState();
   const [message,setMessage] = React.useState();
@@ -42,11 +39,12 @@ export default function LoginTestScreen() {
       const jwtToken = response.data.token;
       await AsyncStorage.multiSet([
         ['jwtToken', jwtToken],
-        ['userInfo.name', userInfo.name]
+        ['userInfo.name', userInfo.name],
+        ['userInfo.email', userInfo.email]
       ]);
-
+      console.log(userInfo.name, userInfo.email);
       // 서버로부터의 응답 처리
-      console.log('sendUserDataToServerSuccess', accessToken, dataToSend);
+      console.log('sendUserDataToServerSuccess',accessToken,dataToSend);
       console.log(jwtToken);
       setJwtToken(jwtToken);
     } catch (error) {
@@ -60,17 +58,9 @@ export default function LoginTestScreen() {
     if (response?.type === 'success') {
         setAccessToken(response.authentication.accessToken);
         sendUserDataToServer(accessToken, userInfo); // 서버로 데이터 전송
-        getUserData();
-        //AsyncStorage.setItem('jwtToken', jwtToken);
-        
-        console.log('response: '+ response.authentication);
-        console.log('accessToken: ' + accessToken);
-        console.log('final post success');   
-        
-        navigation.navigate('SetNation');
+        console.log('final post success');      
     }
     else{
-        console.log(response);
         console.log('final post failed');      
     }
       }
@@ -93,19 +83,17 @@ export default function LoginTestScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.star}></View>
-      <Text style={styles.welcome}>Welcome!</Text>
-      <View style={styles.box}></View>
-      <View style={styles.mentContainer}>
-        <Text style={styles.ment}>⚡3초만에 시작하기</Text>
-      </View>
-      <TouchableOpacity 
-        style={styles.googleButton} 
-        onPress={accessToken ? getUserData : () => promptAsync({ showInRecents: true })}>
-        <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
-      </TouchableOpacity>
-      <StatusBar />
-      {jwtToken && <MapScreen jwtToken={jwtToken} />} 
+    <View style={styles.star}></View>
+    <Text style={styles.welcome}>Welcome!</Text>
+    <View style={styles.box}></View>
+    <View style={styles.mentContainer}>
+      <Text style={styles.ment}>⚡3초만에 시작하기</Text>
+    </View>
+    <TouchableOpacity style={styles.googleButton} onPress={accessToken ? getUserData : () => promptAsync({ showInRecents: true })}>
+  <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
+    </TouchableOpacity>
+    <StatusBar />
+    {jwtToken && <MapScreen jwtToken={jwtToken} />} 
   </View>
   );
 }

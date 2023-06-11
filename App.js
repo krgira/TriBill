@@ -20,11 +20,12 @@ const App = () => {
     // </NavigationContainer>
  
 
-    //<LoginTestScreen />
+    <LoginTestScreen />
    //<MapScreen />
     //<SettingScreen/>
     //<ChangeCurrencyButton/>
-    <AlarmCurrencyButton/>
+    //<AlarmCurrencyButton/>
+    //<CurrencyScreen />
   );
 };
 
