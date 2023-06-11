@@ -409,7 +409,7 @@ const SetNationScreen = () => {
         // Handle any error that occurred during the fetch request
       });
   
-    console.log("fetch end");
+    console.log("SetNation fetch end");
   };
   
 

@@ -7,15 +7,16 @@ import { LogContextProvider } from './contexts/LogContext';
 import LoginTestScreen from './screens/LoginTestScreen';
 import MainTab from './screens/MainTab';
 import MapScreen from './screens/MapScreen';
+import CurrencyScreen from './screens/CurrencyScreen';
+import AddInviteCodeScreen from './screens/AddInviteCodeScreen';
 
 const App = () => {
   return (
+
     <NavigationContainer>
-      <MainTab />
-     {/*<RootStack />*/}
+      <CurrencyScreen />
     </NavigationContainer>
-
-
+ 
 
     //<LoginTestScreen />
     //<MapScreen />

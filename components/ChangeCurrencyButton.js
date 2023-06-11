@@ -15,10 +15,7 @@ function ChangeCurrencyButton({ onSelectCurrency }) {
   const [currencyList, setCurrencyList] = useState([]);
   const [showCurrencyList, setShowCurrencyList] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
-  // const [modalVisible, setModalVisible] = useState(false);
-  // const [budget, setBudget] = useState('');
-  // const inputRef = useRef(null);
-  // const [buttonContainerStyle, setButtonContainerStyle] = useState(styles.modalContent);
+  
 
   const handleCurrencySelection = () => {
     onSelectCurrency(selectedCurrency);
@@ -209,24 +206,6 @@ const createList =  () => {
   setCurrencyList(newList);
 }
 
-  //여기 아래부터는 환율 알림 버튼 
-
-  // const handleIconPress = () => {
-  //   setModalVisible(true);
-  // };
-
-  // const closeModal = () => {
-  //   setModalVisible(false);
-  // };
-
-  // const handleTextInputFocus = () => {
-  //   inputRef.current.focus();
-  // };
-
-  // const handleTextChange = (value) => {
-  //   const numericValue = value.replace(/[^0-9.]/g, '');
-  //   setBudget(numericValue);
-  // };
 
   const handleContainerPress = () => {
     Keyboard.dismiss();
@@ -242,24 +221,7 @@ const createList =  () => {
   
   };
 
-  // useEffect(() => {
-  //   Keyboard.addListener('keyboardWillShow', handleKeyboardWillShow);
-  //   Keyboard.addListener('keyboardWillHide', handleKeyboardWillHide);
 
-  //   return () => {
-  //     Keyboard.removeListener('keyboardWillShow', handleKeyboardWillShow);
-  //     Keyboard.removeListener('keyboardWillHide', handleKeyboardWillHide);
-  //   };
-  // }, []);
-
-  // const handleKeyboardWillShow = () => {
-  //   setButtonContainerStyle({ ...styles.modalContent, top: 150 });
-  // };
-
-  // const handleKeyboardWillHide = () => {
-  //   setButtonContainerStyle(styles.modalContent);
-  // };
- //여기까지
 
   return (
     <View style={styles.container}>
@@ -318,54 +280,6 @@ const createList =  () => {
       )}
        </View>
 
-
- {/* 환율알림버튼시작 */}
-       {/* <View style={styles.notificationButtonContainer}>
-        <View>
-      <View style={[styles.sortIcon, { position: 'absolute', bottom: 20, right: 20 }]}>
-        <TouchableOpacity onPress={handleIconPress} style={styles.bellButton}>
-          <Ionicons name="md-notifications" size={24} color="#4974A5" />
-        </TouchableOpacity>
-      </View>
-      
-      <Modal visible={modalVisible} animationType="slide" transparent={true}>
-        <TouchableOpacity activeOpacity={1} style={styles.modalContainer} onPress={closeModal}>
-          <TouchableWithoutFeedback>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalText}>알림 받을 환율을 설정하십시오</Text>
-              <Text style={styles.modalSecondText}>설정한 환율 이하로 내려갈 경우 알림을 보내드려요</Text>
-              <KeyboardAvoidingView style={styles.container} behavior="padding">
-                <View style={styles.popupBox}>
-                  <TextInput
-                    ref={inputRef}
-                    style={styles.input}
-                    placeholder="환율을 입력해주세요"
-                    keyboardType="numeric"
-                    onFocus={handleTextInputFocus}
-                    onChangeText={handleTextChange}
-                    value={budget}
-                  />
-                </View>
-              </KeyboardAvoidingView>
-              <View style={styles.boxContainer}>
-                <TouchableOpacity style={styles.leftbox} onPress={closeModal}>
-                  <Text style={styles.leftboxText}>취소</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.rightbox} onPress={() => {
-                  handleAddButtonPress();
-                  closeModal();
-                }}>
-                  <Text style={styles.rightboxText}>설정</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </TouchableOpacity>
-      </Modal>
-    </View>
-        {/* 환율버튼알림 끝 */}
-        
-      {/* </View> */} 
     </View>
 
   );

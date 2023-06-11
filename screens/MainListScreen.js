@@ -10,13 +10,14 @@ import axios from "axios";
 function MainListScreen () {
   const navigation = useNavigation();
   const route = useRoute();
+  const [tripList, setTripList] = useState([]);
   const [token, setToken] = useState('');
   console.log(token);
 
   const checkAsyncStorage = async () => {
     try {
       const jwtToken = await AsyncStorage.getItem('jwtToken');
-      setToken(jwtToken || '');
+      setToken(jwtToken);
     } catch (error) {
       console.log('Error retrieving data from AsyncStorage:', error);
     }
@@ -38,20 +39,25 @@ function MainListScreen () {
         console.log(data); // Log the received data
   
         const tripLists = data;
-
-        // Update members state variable with the retrieved names
+  
+        // Update tripList state variable with the retrieved data
         setTripList(tripLists);
       } else {
         // Handle error responses
         console.log('Error (response not okay):', response.data);
       }
     } catch (error) {
-      // Handle network errors
-      console.log('Error (fetchData error):', error);
+      // Handle network errors or server-side errors
+      console.log('Error:', error.response); // Log the error response
+  
+      // Check if the error response exists and display the error message
+      if (error.response) {
+        console.log('Error message:', error.response.data);
+      } else {
+        console.log('Network error:', error.message);
+      }
     }
   };
-
-  const [tripList, setTripList] = useState([]);
 
   useEffect(() => {
     checkAsyncStorage();
