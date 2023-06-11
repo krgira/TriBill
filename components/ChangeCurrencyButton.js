@@ -15,10 +15,10 @@ function ChangeCurrencyButton({ onSelectCurrency }) {
   const [currencyList, setCurrencyList] = useState([]);
   const [showCurrencyList, setShowCurrencyList] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
-  const [modalVisible, setModalVisible] = useState(false);
-  const [budget, setBudget] = useState('');
-  const inputRef = useRef(null);
-  const [buttonContainerStyle, setButtonContainerStyle] = useState(styles.modalContent);
+  // const [modalVisible, setModalVisible] = useState(false);
+  // const [budget, setBudget] = useState('');
+  // const inputRef = useRef(null);
+  // const [buttonContainerStyle, setButtonContainerStyle] = useState(styles.modalContent);
 
   const handleCurrencySelection = () => {
     onSelectCurrency(selectedCurrency);
@@ -211,22 +211,22 @@ const createList =  () => {
 
   //여기 아래부터는 환율 알림 버튼 
 
-  const handleIconPress = () => {
-    setModalVisible(true);
-  };
+  // const handleIconPress = () => {
+  //   setModalVisible(true);
+  // };
 
-  const closeModal = () => {
-    setModalVisible(false);
-  };
+  // const closeModal = () => {
+  //   setModalVisible(false);
+  // };
 
-  const handleTextInputFocus = () => {
-    inputRef.current.focus();
-  };
+  // const handleTextInputFocus = () => {
+  //   inputRef.current.focus();
+  // };
 
-  const handleTextChange = (value) => {
-    const numericValue = value.replace(/[^0-9.]/g, '');
-    setBudget(numericValue);
-  };
+  // const handleTextChange = (value) => {
+  //   const numericValue = value.replace(/[^0-9.]/g, '');
+  //   setBudget(numericValue);
+  // };
 
   const handleContainerPress = () => {
     Keyboard.dismiss();
@@ -241,6 +241,25 @@ const createList =  () => {
     console.log(data.currency, data.amount);
   
   };
+
+  // useEffect(() => {
+  //   Keyboard.addListener('keyboardWillShow', handleKeyboardWillShow);
+  //   Keyboard.addListener('keyboardWillHide', handleKeyboardWillHide);
+
+  //   return () => {
+  //     Keyboard.removeListener('keyboardWillShow', handleKeyboardWillShow);
+  //     Keyboard.removeListener('keyboardWillHide', handleKeyboardWillHide);
+  //   };
+  // }, []);
+
+  // const handleKeyboardWillShow = () => {
+  //   setButtonContainerStyle({ ...styles.modalContent, top: 150 });
+  // };
+
+  // const handleKeyboardWillHide = () => {
+  //   setButtonContainerStyle(styles.modalContent);
+  // };
+ //여기까지
 
   return (
     <View style={styles.container}>
@@ -301,7 +320,7 @@ const createList =  () => {
 
 
  {/* 환율알림버튼시작 */}
-       <View style={styles.notificationButtonContainer}>
+       {/* <View style={styles.notificationButtonContainer}>
         <View>
       <View style={[styles.sortIcon, { position: 'absolute', bottom: 20, right: 20 }]}>
         <TouchableOpacity onPress={handleIconPress} style={styles.bellButton}>
@@ -346,7 +365,7 @@ const createList =  () => {
     </View>
         {/* 환율버튼알림 끝 */}
         
-      </View>
+      {/* </View> */} 
     </View>
 
   );
@@ -440,145 +459,145 @@ const styles = StyleSheet.create({
   },
 
   // 환율알림버튼 시작
-  notificationButtonContainer:{
-    position: 'absolute',
-    top: 80,
-   alignSelf: 'flex-end',
-  },
-  bellButtonContainer: {
-    position: 'absolute',
-   top: 10,
-  alignSelf: 'flex-end',
-  },
-  bellButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#99B7DB',
+//   notificationButtonContainer:{
+//     position: 'absolute',
+//     top: 80,
+//    alignSelf: 'flex-end',
+//   },
+//   bellButtonContainer: {
+//     position: 'absolute',
+//    top: 10,
+//   alignSelf: 'flex-end',
+//   },
+//   bellButton: {
+//     width: 40,
+//     height: 40,
+//     borderRadius: 20,
+//     backgroundColor: '#fff',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     borderWidth: 2,
+//     borderColor: '#99B7DB',
     
-  },
-   modalContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalContent: {
-      width: 300,
-      height: 250,
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 16,
-      backgroundColor: '#FFFFFF',
-    },
-    modalText: {
-    // fontFamily: 'Inter',
-    fontSize: 16,
-    fontWeight: '900',
-    lineHeight: 19,
-    letterSpacing: 0.005,
-    textAlign: 'center',
-    top: 30,
-    },
- popupBox: {
-   top: 65,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 12,
-    paddingHorizontal: 16,
-    marginVertical: 8,
-    width: 250,
-    height: 43,
-    borderWidth: 1.5,
-    borderColor: '#4974A5',
-    borderRadius: 9,
-    position: 'absolute',
-    left: '-41%', // 수평 가운데 정렬을 위해 추가
-},
-modalSecondText: {
-    top:50,
-    // fontFamily: 'Inter',
-    fontSize: 13,
-    fontWeight: '400',
-    lineHeight: 16,
-    letterSpacing: 0.01,
-    textAlign: 'center',
-    color: '#71727A',
-  },
-  boxContainer:{
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  leftbox: {
-    width: 118,
-    height: 40,
-    padding: 12,
-    paddingLeft: 16,
-    paddingRight: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    borderColor: '#4974A5',
-    borderWidth: 1.5,
-    borderRadius: 9,
-    marginRight: 15,
-    marginLeft: 5,
-    justifyContent: 'center',
+//   },
+//    modalContainer: {
+//       flex: 1,
+//       justifyContent: 'center',
+//       alignItems: 'center',
+//       backgroundColor: 'rgba(0, 0, 0, 0.5)',
+//     },
+//     modalContent: {
+//       width: 300,
+//       height: 250,
+//       justifyContent: 'center',
+//       alignItems: 'center',
+//       borderRadius: 16,
+//       backgroundColor: '#FFFFFF',
+//     },
+//     modalText: {
+//     // fontFamily: 'Inter',
+//     fontSize: 16,
+//     fontWeight: '900',
+//     lineHeight: 19,
+//     letterSpacing: 0.005,
+//     textAlign: 'center',
+//     top: 30,
+//     },
+//  popupBox: {
+//    top: 65,
+//     display: 'flex',
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     padding: 12,
+//     paddingHorizontal: 16,
+//     marginVertical: 8,
+//     width: 250,
+//     height: 43,
+//     borderWidth: 1.5,
+//     borderColor: '#4974A5',
+//     borderRadius: 9,
+//     position: 'absolute',
+//     left: '-41%', // 수평 가운데 정렬을 위해 추가
+// },
+// modalSecondText: {
+//     top:50,
+//     // fontFamily: 'Inter',
+//     fontSize: 13,
+//     fontWeight: '400',
+//     lineHeight: 16,
+//     letterSpacing: 0.01,
+//     textAlign: 'center',
+//     color: '#71727A',
+//   },
+//   boxContainer:{
+//     flex: 1,
+//     flexDirection: 'row',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   leftbox: {
+//     width: 118,
+//     height: 40,
+//     padding: 12,
+//     paddingLeft: 16,
+//     paddingRight: 16,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     gap: 8,
+//     borderColor: '#4974A5',
+//     borderWidth: 1.5,
+//     borderRadius: 9,
+//     marginRight: 15,
+//     marginLeft: 5,
+//     justifyContent: 'center',
    
-  },
-  rightbox: {
-    width: 118,
-    height: 40,
-    padding: 12,
-    paddingLeft: 16,
-    paddingRight: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: '#4974A5',
-    borderRadius: 9,
-    justifyContent: 'center',
-  },
-    leftboxText: {
-    width: 23,
-    height: 15,
-    // fontFamily: 'Inter',
-    fontWeight: 'bold',
-    fontSize: 14,
-    lineHeight: 15,
-    color: '#4974A5',
-    flex: 0,
-    flexGrow: 0,
+//   },
+//   rightbox: {
+//     width: 118,
+//     height: 40,
+//     padding: 12,
+//     paddingLeft: 16,
+//     paddingRight: 16,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     gap: 8,
+//     backgroundColor: '#4974A5',
+//     borderRadius: 9,
+//     justifyContent: 'center',
+//   },
+//     leftboxText: {
+//     width: 23,
+//     height: 15,
+//     // fontFamily: 'Inter',
+//     fontWeight: 'bold',
+//     fontSize: 14,
+//     lineHeight: 15,
+//     color: '#4974A5',
+//     flex: 0,
+//     flexGrow: 0,
     
-  },
-  rightboxText: {
-    width: 23,
-    height: 15,
-    // fontFamily: 'Inter',
-    fontWeight: 'bold',
-    fontSize: 14,
-    lineHeight: 15,
-    color: '#FFFFFF',
-    flex: 0, 
-    flexGrow: 0,
-  },
-   input: {
-    flex: 1,
-    // fontFamily: 'Inter',
-    fontSize: 16,
-    fontWeight: '900',
-    lineHeight: 21,
-    letterSpacing: 0.005,
-    textAlign: 'left',
-  },
+//   },
+//   rightboxText: {
+//     width: 23,
+//     height: 15,
+//     // fontFamily: 'Inter',
+//     fontWeight: 'bold',
+//     fontSize: 14,
+//     lineHeight: 15,
+//     color: '#FFFFFF',
+//     flex: 0, 
+//     flexGrow: 0,
+//   },
+//    input: {
+//     flex: 1,
+//     // fontFamily: 'Inter',
+//     fontSize: 16,
+//     fontWeight: '900',
+//     lineHeight: 21,
+//     letterSpacing: 0.005,
+//     textAlign: 'left',
+//   },
   
 });
 

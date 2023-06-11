@@ -40,9 +40,10 @@ export default function LoginTestScreen() {
       const response = await axios.post('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/sign-up', dataToSend);
   
       const jwtToken = response.data.token;
-      await AsyncStorage.setItem('jwtToken', jwtToken);
-      await AsyncStorage.setItem('userInfo', JSON.stringify({ name: userInfo.name }));
-
+      await AsyncStorage.multiSet([
+        ['jwtToken', jwtToken],
+        ['userInfo.name', userInfo.name]
+      ]);
 
       // 서버로부터의 응답 처리
       console.log('sendUserDataToServerSuccess', accessToken, dataToSend);
