@@ -51,11 +51,13 @@ function MainTab() {
   return (
     <Tab.Navigator
       screenOptions={{
-        activeTintColor: '#4974A5',
+        showLabel: false,
+        tabBarInactiveTintColor: 'lightgrey',
+        tabBarActiveTintColor: '#4974A5',
       }}
     >
       <Tab.Screen 
-        name='MainStack' 
+        name='List' 
         component={MainStackScreens} 
         options={{
           tabBarIcon: ({color, size}) => (
