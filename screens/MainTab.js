@@ -13,6 +13,8 @@ import MainScreen from './MainScreen';
 import MainDetailScreen from './MainDetailScreen';
 import ShowInviteCodeScreen from './ShowInviteCodeScreen';
 
+import AlarmCurrencyButton from '../components/AlarmCurrencyButton';
+
 // Create a Stack Navigator for the screens nested within the MainTab
 const MainStack = createStackNavigator();
 
@@ -71,8 +73,13 @@ function MainTab() {
         component={CurrencyScreen} 
         options={{
           tabBarIcon: ({color, size}) => (
-            <Ionicons name="ios-logo-usd" size={24} color="black" />
-          )
+            <Ionicons name="ios-logo-usd" size={size} color={color} />
+          ),
+          headerRight: () => (
+            <View style={styles.alarmButton}>
+              <AlarmCurrencyButton />
+            </View>
+          ),
         }}
       />
       <Tab.Screen 
@@ -80,7 +87,7 @@ function MainTab() {
         component={MapScreen} 
         options={{
           tabBarIcon: ({color, size}) => (
-            <Ionicons name="ios-bar-chart-sharp" size={24} color="black" />
+            <Ionicons name="ios-bar-chart-sharp" size={size} color={color} />
           )
         }}
       />
@@ -89,7 +96,7 @@ function MainTab() {
         component={SettingScreen} 
         options={{
           tabBarIcon: ({color, size}) => (
-            <Ionicons name="settings-sharp" size={24} color="black" />
+            <Ionicons name="settings-sharp" size={size} color={color} />
           )
         }}
       />
@@ -101,7 +108,9 @@ const styles = StyleSheet.create({
   headerIcon: {
     paddingHorizonal: 25,
   },
-
+  alarmButton: {
+    paddingTop: 80,
+  },
 });
 
 export default MainTab;

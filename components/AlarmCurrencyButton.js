@@ -51,13 +51,12 @@ function AlarmCurrencyButton() {
     <View style={styles.container}>
    
  {/* 환율알림버튼시작 */}
-        <View style={styles.notificationButtonContainer}>
-        
-      <View style={[styles.sortIcon, { position: 'absolute', bottom: 20, right: 20 }]}>
-        <TouchableOpacity onPress={handleIconPress} style={styles.bellButton}>
-          <Ionicons name="md-notifications" size={24} color="#4974A5" />
-        </TouchableOpacity>
-      </View>
+      <View style={styles.notificationButtonContainer}>
+        <View style={[styles.sortIcon, { position: 'absolute', bottom: 20, right: 20 }]}>
+          <TouchableOpacity onPress={handleIconPress} style={styles.bellButton}>
+            <Ionicons name="md-notifications" size={24} color="#4974A5" />
+          </TouchableOpacity>
+        </View>
       
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <TouchableOpacity activeOpacity={1} style={styles.modalContainer} onPress={closeModal}>
@@ -109,14 +108,14 @@ const styles = StyleSheet.create({
   },
   // 환율알림버튼 시작
   notificationButtonContainer:{
-    position: 'absolute',
-    top: 100,
+    //position: 'absolute',
+    //top: 100,
    alignSelf: 'flex-end',
   },
   bellButtonContainer: {
     position: 'absolute',
-   top: 10,
-  alignSelf: 'flex-end',
+    top: 10,
+    alignSelf: 'flex-end',
   },
   bellButton: {
     width: 40,

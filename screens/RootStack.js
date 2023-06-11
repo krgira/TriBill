@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SetNationScreen from './SetNationScreen';
 import SetScheduleScreen from './SetScheduleScreen';
 import TargetAmountScreen from './TargetAmountScreen';
+import AddInviteCodeScreen from './AddInviteCodeScreen';
 import MainTab from './MainTab';
 import LoginTestScreen from './LoginTestScreen';
 import MainUpdateScreen from './MainUpdateScreen';
@@ -31,6 +32,11 @@ function RootStack() {
       <Stack.Screen
         name="TargetAmount"
         component={TargetAmountScreen}
+        //options={{headerShown: false}}  // 헤더 중첩을 막기 위함
+      />
+      <Stack.Screen
+        name="AddInviteCode"
+        component={AddInviteCodeScreen}
         //options={{headerShown: false}}  // 헤더 중첩을 막기 위함
       />
       <Stack.Screen

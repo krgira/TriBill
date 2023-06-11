@@ -25,9 +25,13 @@ function TargetAmountScreen() {
     Keyboard.dismiss();
   };
 
+  const handleLaterButtonPress = () => {
+    navigation.navigate("AddInviteCode");
+  };
+
   const handleAddButtonPress = () => {
     setTarget(tripId);
-    navigation.navigate("MainTab");
+    navigation.navigate("AddInviteCode");
   };
 
   const inputRef = React.useRef(null);
@@ -88,7 +92,7 @@ const setTarget = (tripId) => {
           />
         </View>
         <View style={buttonContainerStyle}>
-          <TouchableOpacity style={styles.laterButton}>
+          <TouchableOpacity style={styles.laterButton} onPress={handleLaterButtonPress}>
             <Text style={styles.laterButtonText}>나중에</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.addButton} onPress={handleAddButtonPress}>

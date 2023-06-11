@@ -15,12 +15,12 @@ import AlarmCurrencyButton from './components/AlarmCurrencyButton';
 const App = () => {
   return (
 
-    // <NavigationContainer>
-    //   <CurrencyScreen />
-    // </NavigationContainer>
+     <NavigationContainer>
+       <MainTab />
+    </NavigationContainer>
  
 
-    <LoginTestScreen />
+    //<LoginTestScreen />
    //<MapScreen />
     //<SettingScreen/>
     //<ChangeCurrencyButton/>

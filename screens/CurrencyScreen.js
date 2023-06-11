@@ -80,9 +80,6 @@ function CurrencyScreen() {
 
   return (
     <View style={styles.container}>
-      <View>
-        <AlarmCurrencyButton />
-      </View>
 
       <View style={styles.graph}>
         <LineChart
@@ -117,11 +114,15 @@ function CurrencyScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  alarmButton: {
+    flex: 0.5,
   },
   graph: {
     flex: 1,
-    marginTop: '50%', // Add this line to center the text vertically
+    marginTop: '30%', // Add this line to center the text vertically
   },
   currencyButton: {
     flex: 1,

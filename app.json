@@ -28,13 +28,13 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.tribill.TriBill",
-      "versionCode": 1,
+      "package": "com.capstone.TriBill",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCNdWCc6u5zfwo87IsBd161NNnG9SxvAIQ"
         }
       }
+      
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -43,7 +43,7 @@
       "eas": {
         "projectId": "0d2a7784-93f7-4156-8ced-ac20b43faba6"
       }
-    },
-    "owner": "krgira"
+    }
   }
 }
+ 
