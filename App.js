@@ -9,19 +9,22 @@ import MainTab from './screens/MainTab';
 import MapScreen from './screens/MapScreen';
 import CurrencyScreen from './screens/CurrencyScreen';
 import AddInviteCodeScreen from './screens/AddInviteCodeScreen';
+import ChangeCurrencyButton from './components/ChangeCurrencyButton';
+import AlarmCurrencyButton from './components/AlarmCurrencyButton';
 
 const App = () => {
   return (
 
-    <NavigationContainer>
-      <CurrencyScreen />
-    </NavigationContainer>
+    // <NavigationContainer>
+    //   <CurrencyScreen />
+    // </NavigationContainer>
  
 
-    <LoginTestScreen />
+    //<LoginTestScreen />
    //<MapScreen />
     //<SettingScreen/>
-    //<AlarmCurrencyButton/>
+    //<ChangeCurrencyButton/>
+    <AlarmCurrencyButton/>
   );
 };
 

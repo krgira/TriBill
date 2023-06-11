@@ -12,7 +12,7 @@ function AlarmCurrencyButton() {
   const [budget, setBudget] = useState('');
   const inputRef = useRef(null);
   const [buttonContainerStyle, setButtonContainerStyle] = useState(styles.modalContent);
-
+  const [modalVisible, setModalVisible] = useState(false);
 
   //여기 아래부터는 환율 알림 버튼 
 
