@@ -4,18 +4,23 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import RootStack from './screens/RootStack';
 import { LogContextProvider } from './contexts/LogContext';
-import LoginTestScreen from './screens/loginTestScreen';
+import LoginTestScreen from './screens/LoginTestScreen';
 import MainTab from './screens/MainTab';
 import MapScreen from './screens/MapScreen';
+import SettingScreen from './screens/SettingScreen';
+import AlarmCurrencyButton from './components/AlarmCurrencyButton';
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <MainTab />
-     {/*<RootStack />*/}
-    </NavigationContainer>
+    // <NavigationContainer>
+    //   <MainTab />
+    //  {/*<RootStack />*/}
+    // </NavigationContainer>
 
     //<LoginTestScreen />
+    //<MapScreen />
+    //<SettingScreen/>
+    <AlarmCurrencyButton/>
   );
 };
 

@@ -39,9 +39,10 @@ export default function App() {
       const jwtToken = response.data.token;
       await AsyncStorage.multiSet([
         ['jwtToken', jwtToken],
-        ['userInfo.name', userInfo.name]
+        ['userInfo.name', userInfo.name],
+        ['userInfo.email', userInfo.email]
       ]);
-
+      console.log(userInfo.name, userInfo.email);
       // 서버로부터의 응답 처리
       console.log('sendUserDataToServerSuccess',accessToken,dataToSend);
       console.log(jwtToken);
