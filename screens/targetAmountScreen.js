@@ -8,6 +8,7 @@ function TargetAmountScreen() {
   const [budget, setBudget] = React.useState('');
   const [showCurrency, setShowCurrency] = React.useState(false);
   const [buttonContainerStyle, setButtonContainerStyle] = React.useState(styles.buttonContainer);
+  const [tripId, setTripId] = React.useState();
   const navigation = useNavigation();
 
   const handleTextInputFocus = () => {
@@ -25,23 +26,21 @@ function TargetAmountScreen() {
   };
 
   const handleAddButtonPress = () => {
-    setTarget();
+    setTarget(tripId);
     navigation.navigate("MainTab");
   };
 
   const inputRef = React.useRef(null);
-
-  console.log("budget: " + budget);
   const amount = parseFloat(budget);
-  console.log("amount: " + amount);
+
 
   AsyncStorage.getItem('tripId')
   .then(tripIdString => {
     if (tripIdString !== null) {
       const tripId = parseInt(tripIdString, 10);
-      console.log('Retrieved ID:', tripId);
+      console.log('Retrieved ID (amount):', tripId);
 
-      setTarget(tripId); // Call setTarget() with the tripId value
+      setTripId(tripId); // Call setTarget() with the tripId value
     } else {
       // Handle the case when tripId is not found in AsyncStorage
       console.log('Trip ID not found in AsyncStorage');
@@ -68,7 +67,7 @@ const setTarget = (tripId) => {
       console.error('Error setting target:', error);
     });
 
-  console.log("Fetch end");
+  console.log("TargetAmount Fetch end");
 };
 
 

@@ -5,8 +5,7 @@ import SetNationScreen from './SetNationScreen';
 import SetScheduleScreen from './SetScheduleScreen';
 import TargetAmountScreen from './TargetAmountScreen';
 import MainTab from './MainTab';
-import MainScreen from './MainScreen';
-import MainDetailScreen from './MainDetailScreen';
+import LoginTestScreen from './LoginTestScreen';
 import MainUpdateScreen from './MainUpdateScreen';
 
 const Stack = createNativeStackNavigator();
@@ -14,6 +13,11 @@ const Stack = createNativeStackNavigator();
 function RootStack() {
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="LoginTest"
+        component={LoginTestScreen}
+        options={{headerShown: false}}  // 헤더 중첩을 막기 위함
+      />
       <Stack.Screen
         name="SetNation"
         component={SetNationScreen}

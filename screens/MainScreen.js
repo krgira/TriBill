@@ -12,6 +12,7 @@ import axios from 'axios';
 import "react-native-gesture-handler";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { CalendarList } from 'react-native-calendars';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 import FloatingWriteButton from '../components/FloatingWriteButton';
@@ -19,10 +20,19 @@ import FloatingWriteButton from '../components/FloatingWriteButton';
 
 
 function MainScreen() {
-  const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NjQwODk2OSwiZW1haWwiOiJ0ZXN0ZXIyMzMzM0BuYXZlci5jb20ifQ.vXH-HK0g4okvL7YbeDqXx354wLdnp5TKahqPYLbDuyStOLDM3SxPXVCQqja9h4_nP3NpzpNqAQBu_c3k8UpK0w";
   const navigation = useNavigation();
   const route = useRoute();
   const {id} = route.params;
+  const [token, setToken] = useState('');
+  
+  const checkAsyncStorage = async () => {
+    try {
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      setToken(jwtToken || '');
+    } catch (error) {
+      console.log('Error retrieving data from AsyncStorage:', error);
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -92,6 +102,7 @@ function MainScreen() {
   const [accountList, setAccountList] = useState();
 
   useEffect(() => {
+    checkAsyncStorage();
     fetchData();
   }, []);
 

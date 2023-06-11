@@ -17,7 +17,7 @@ function CurrencyGraph() {
     };
 
     <View>
-        <LineChart
+      <LineChart
         data={data}
         width={screenWidth}
         height={220}

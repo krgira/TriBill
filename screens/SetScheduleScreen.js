@@ -20,6 +20,7 @@ const isSameDay = (date1, date2) => {
 
 function SetScheduleScreen() {
   const navigation = useNavigation();
+  const [tripId, setTripId] = useState();
   const [selectedStartDate, setSelectedStartDate] = useState();
   const [selectedEndDate, setSelectedEndDate] = useState();
 
@@ -76,7 +77,9 @@ const renderFilledDates = () => {
   .then(tripIdString => {
     if (tripIdString !== null) {
       const tripId = parseInt(tripIdString, 10);
-      console.log('Retrieved ID:', tripId);
+
+      setTripId(tripId);
+      //console.log('Retrieved ID (schdule screen):', tripId);
       // Use the savedId value as needed in the other screen
     } else {
       // Handle the case when savedId is not found in AsyncStorage
@@ -101,17 +104,17 @@ const renderFilledDates = () => {
       .then(response => response.json())
       .then(data => {
         console.log(data);
-        console.log("start date:", data.startDate);
-        console.log("end date:", data.endDate);
+        //console.log("start date:", data.startDate);
+        //console.log("end date:", data.endDate);
       })
       .catch(error => {
         console.error(error);
       });
-    console.log("fetch end");
+    console.log("SetSchedule fetch end");
   };
 
   const onPress = () => {
-    setSchedule();
+    setSchedule(tripId);
     navigation.navigate("TargetAmount");
   };
 

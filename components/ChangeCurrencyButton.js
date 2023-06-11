@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 
-function ChangeCurrencyButton() {
+function ChangeCurrencyButton({ onSelectCurrency }) {
 
   const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NTg4NzkwNCwiZW1haWwiOiIzNzMyOGRlZC04OGE0LTQ0MjQtYWZhYS0zNWJmMDkzZWUxZDBAc29jaWFsVXNlci5jb20ifQ.jvz6sAwLI0V6n5T_Zr7JaUigx5JMi90vPZCaasZ5FvJqv_CPTMGOr8_fnG9JtuL1vUOmh1ZFjjiycSli0zI-CA";
 
@@ -19,6 +19,10 @@ function ChangeCurrencyButton() {
   const [budget, setBudget] = useState('');
   const inputRef = useRef(null);
   const [buttonContainerStyle, setButtonContainerStyle] = useState(styles.modalContent);
+
+  const handleCurrencySelection = () => {
+    onSelectCurrency(selectedCurrency);
+  };
 
   const fetchExchangeRate = async (selectedCurrency) => {
     try {
@@ -237,25 +241,6 @@ const createList =  () => {
     console.log(data.currency, data.amount);
   
   };
-
-  // useEffect(() => {
-  //   Keyboard.addListener('keyboardWillShow', handleKeyboardWillShow);
-  //   Keyboard.addListener('keyboardWillHide', handleKeyboardWillHide);
-
-  //   return () => {
-  //     Keyboard.removeListener('keyboardWillShow', handleKeyboardWillShow);
-  //     Keyboard.removeListener('keyboardWillHide', handleKeyboardWillHide);
-  //   };
-  // }, []);
-
-  // const handleKeyboardWillShow = () => {
-  //   setButtonContainerStyle({ ...styles.modalContent, top: 150 });
-  // };
-
-  // const handleKeyboardWillHide = () => {
-  //   setButtonContainerStyle(styles.modalContent);
-  // };
- //여기까지
 
   return (
     <View style={styles.container}>

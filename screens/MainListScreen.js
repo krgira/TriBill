@@ -3,15 +3,26 @@ import { View, StyleSheet, ScrollView, Text,  } from "react-native";
 import { List,  } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 
 function MainListScreen () {
   const navigation = useNavigation();
   const route = useRoute();
-  const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NjQwODk2OSwiZW1haWwiOiJ0ZXN0ZXIyMzMzM0BuYXZlci5jb20ifQ.vXH-HK0g4okvL7YbeDqXx354wLdnp5TKahqPYLbDuyStOLDM3SxPXVCQqja9h4_nP3NpzpNqAQBu_c3k8UpK0w";
-  
-  const fetchData = async () => {
+  const [token, setToken] = useState('');
+  console.log(token);
+
+  const checkAsyncStorage = async () => {
+    try {
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      setToken(jwtToken || '');
+    } catch (error) {
+      console.log('Error retrieving data from AsyncStorage:', error);
+    }
+  };
+
+  const fetchData = async (token) => {
     try {
       const response = await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/trip/user/TravelList', {
         headers: {
@@ -43,7 +54,8 @@ function MainListScreen () {
   const [tripList, setTripList] = useState([]);
 
   useEffect(() => {
-    fetchData();
+    checkAsyncStorage();
+    fetchData(token);
   }, []);
 
     return (

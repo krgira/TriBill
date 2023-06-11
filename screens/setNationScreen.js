@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
@@ -94,6 +94,21 @@ const SetNationScreen = () => {
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [selectedNations, setSelectedNations] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    const checkAsyncStorage = async () => {
+      try {
+        const jwtToken = await AsyncStorage.getItem('jwtToken');
+        setToken(jwtToken || '');
+      } catch (error) {
+        console.log('Error retrieving data from AsyncStorage:', error);
+      }
+    };
+
+    checkAsyncStorage();
+  }, []);
+
   const countries = [
     { currencyType: "GHS", id: 1, name: "가나", emoji: "🇬🇭" },
     { currencyType: "GNF", id: 2, name: "기니", emoji: "🇬🇳" },
@@ -354,9 +369,9 @@ const SetNationScreen = () => {
 
     );
   };
-  const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NjM4MzM0NywiZW1haWwiOiJ0ZXN0ZXIyMzMzM0BuYXZlci5jb20ifQ.1J_KsKKn5FKpTzD0oBbrSjTIc1MsoxGwYwbQ_nvgKWrcqNWr8If5KGJ2tb7i2fCR_-mjb51ApZmTJbivpJbKxw";
-  const setNation = () => {
   
+ 
+  const setNation = () => {
     fetch('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/trip/create/nation', {
       method: 'POST',
       headers: {
