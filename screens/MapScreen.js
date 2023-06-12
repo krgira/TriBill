@@ -4,6 +4,7 @@ import MapView from 'react-native-maps';
 import { Button, Image, Text, View, StyleSheet } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Swiper from 'react-native-swiper';
 
 const MapScreen = () => {
   const KOREA_LATITUDE = 37.5665; // 대한민국 위도
@@ -14,6 +15,8 @@ const MapScreen = () => {
   const [locations, setLocations] = React.useState([]);
   const [nationsFromServer, setNationFromServer] = React.useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedTravelList, setSelectedTravelList] = useState([]);
+
 
   async function fetchData() {
     try {
@@ -25,14 +28,11 @@ const MapScreen = () => {
           Authorization: `Bearer ${jwtToken}`,
         },
       });
-  
-      setNationFromServer(response.data.nations);
+      
       const data = response.data;
-      const id = data.id;
-      const title = data.title;
-      const startDate = data.startDate;
-      const endDate = data.endDate;
-      console.log(id, title, startDate, endDate);
+      console.log(data);
+
+      setNationFromServer(response.data.nations);
 
       console.log(nationsFromServer);
       const newLocations = [];
@@ -78,31 +78,51 @@ const MapScreen = () => {
   }, []);
 
 
-//   const handleMarkerPress = async (countryIndex) => {
-//     const country = nationsFromServer[countryIndex];
-//     setSelectedCountry(country);
-//     console.log('선택한 국가:', country);
-//     const jwtToken = await AsyncStorage.getItem('jwtToken');
+  const handleMarkerPress = async (countryIndex) => {
+    const country = nationsFromServer[countryIndex];
+    setSelectedCountry(country);
+    console.log('선택한 국가:', country);
+    const jwtToken = await AsyncStorage.getItem('jwtToken');
 
-//   try {
-//     const response = await axios.get(`http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/report?country=${encodeURIComponent(country)}`, {
-//       headers: {
-//         Authorization: `Bearer ${jwtToken}`,
-//       },
-//     });
+  try {
+    const response = await axios.get(`http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/report/travel/list?nation=${encodeURIComponent(country)}`, {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    });
+   
     
-//     const data = response.data;
-//     const id = data.id;
-//     const title = data.title;
-//     const startDate = data.startDate;
-//     const endDate = data.endDate;
+    const data = response.data;
+    //console.log(data);
+    
+    setSelectedTravelList(data);
 
-//     // 받아온 데이터를 처리하는 로직을 작성합니다.
-//     console.log(id, title, startDate, endDate);
-//   } catch (error) {
-//     console.error('데이터 요청 중 오류 발생:', error);
-//   }
-// };
+    console.log(selectedTravelList);
+
+    // 받아온 데이터를 처리하는 로직을 작성합니다.
+    
+  } catch (error) {
+    console.error('데이터 요청 중 오류 발생:', error);
+  }
+};
+
+
+
+
+const SelectedTravelList = ({ travelList }) => {
+  return (
+    <View>
+      {travelList.map((item) => (
+        <View key={item.id} style={styles.travelItemContainer}>
+          <Text style={styles.travelItemTitle}>{item.title}</Text>
+          <Text style={styles.travelItemDate}>{item.startDate} - {item.endDate}</Text>
+        </View>
+      ))}
+    </View>
+  );
+};
+
+
   
   return (
     <View style={styles.screen}>
@@ -128,6 +148,12 @@ const MapScreen = () => {
       ))}
 
       </MapView>
+      {selectedCountry && (
+      <View style={styles.travelListContainer}>
+        <Text style={styles.travelListTitle}>Travel List</Text>
+        <SelectedTravelList travelList={selectedTravelList} />
+      </View>
+    )}
     </View>
   );
 }
@@ -141,5 +167,33 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: "100%"
-  }
+  },
+  travelListContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+    padding: 10,
+    maxHeight: 200,
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
+    zIndex: 1,
+    overflow: 'hidden',
+  },
+  travelItemContainer: {
+    marginBottom: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  travelItemTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  travelItemDate: {
+    fontSize: 14,
+    color: '#666',
+  },
 });
