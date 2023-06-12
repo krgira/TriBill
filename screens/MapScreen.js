@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import MapView from 'react-native-maps';
-import { Button, Image, Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 
 const MapScreen = () => {
@@ -12,8 +13,10 @@ const MapScreen = () => {
   const ZOOM_LEVEL = 70; // 확대 정도 조절
   const GOOGLE_MAPS_API_KEY = 'AIzaSyD9zR2OmIdJG31qTIVjzMt54Fa64Tcy-Fs'; // Google Maps Geocoding API 키
   const COUNTRY_TRANSLATION_API_KEY = 'AIzaSyAb3_RJOHfh0awr5qu_tIHAoZKoc8K5x5A'; // 국가 이름 변환 API 키
-  const [locations, setLocations] = React.useState([]);
-  const [nationsFromServer, setNationFromServer] = React.useState([]);
+
+  const navigation = useNavigation();
+  const [locations, setLocations] = useState([]);
+  const [nationsFromServer, setNationFromServer] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedTravelList, setSelectedTravelList] = useState([]);
 
@@ -93,7 +96,7 @@ const MapScreen = () => {
    
     
     const data = response.data;
-    //console.log(data);
+    console.log(data);
     
     setSelectedTravelList(data);
 
@@ -113,10 +116,15 @@ const SelectedTravelList = ({ travelList }) => {
   return (
     <View>
       {travelList.map((item) => (
-        <View key={item.id} style={styles.travelItemContainer}>
+        <TouchableOpacity 
+          key={item.id} 
+          style={styles.travelItemContainer}
+          onPress={() => {
+            navigation.navigate('Report');
+          }}>
           <Text style={styles.travelItemTitle}>{item.title}</Text>
           <Text style={styles.travelItemDate}>{item.startDate} - {item.endDate}</Text>
-        </View>
+        </TouchableOpacity>
       ))}
     </View>
   );

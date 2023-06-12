@@ -15,24 +15,16 @@ import ChangeCurrencyButton from './components/ChangeCurrencyButton';
 import AlarmCurrencyButton from './components/AlarmCurrencyButton';
 
 const App = () => {
-  const getFonts = async () => {
-    await Font.loadAsync({
-      Inter_Black: require("./assets/fonts/Inter-Black.ttf"),
-      Inter_Bold: require("./assets/fonts/Inter-Bold.ttf"),
-      Inter_ExtraBold: require("./assets/fonts/Inter-ExtraBold.ttf"),
-      Inter_SemiBold: require("./assets/fonts/Inter-SemiBold.ttf"),
-    });
-  };
 
   return (
 
-     <NavigationContainer>
-       <MainTab />
+    <NavigationContainer>
+       <MapScreen />
     </NavigationContainer>
  
 
     //<LoginTestScreen />
-    //<MapScreen />
+    
     //<SettingScreen/>
     //<ChangeCurrencyButton/>
     //<AlarmCurrencyButton/>
