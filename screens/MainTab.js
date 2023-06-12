@@ -6,6 +6,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 import CurrencyScreen from './CurrencyScreen';
 import MapScreen from './MapScreen';
+import ReportScreen from './ReportScreen';
 import SettingScreen from './SettingScreen';
 
 import MainListScreen from './MainListScreen';
@@ -42,6 +43,25 @@ const MainStackScreens = () => (
       options={{ headerShown: false }}
     />
   </MainStack.Navigator>
+);
+
+// Create a Stack Navigator for the screens nested within the MainTab
+const MapStack = createStackNavigator();
+
+// Define the screens for the MainStack
+const MapStackScreens = () => (
+  <MapStack.Navigator>
+    <MapStack.Screen
+      name="Map"
+      component={MapScreen}
+      options={{ headerShown: false }}
+    />
+    <MapStack.Screen
+      name="Report"
+      component={ReportScreen}
+      options={{ headerShown: false }}
+    />
+  </MapStack.Navigator>
 );
 
 const Tab = createBottomTabNavigator();
@@ -81,7 +101,7 @@ function MainTab() {
       />
       <Tab.Screen 
         name='Map' 
-        component={MapScreen} 
+        component={MapStackScreens} 
         options={{
           tabBarIcon: ({color, size}) => (
             <Ionicons name="ios-bar-chart-sharp" size={size} color={color} />

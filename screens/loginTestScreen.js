@@ -11,7 +11,7 @@ import MapScreen from './MapScreen';
 
 WebBrowser.maybeCompleteAuthSession();
 
-export default function App() {
+export default function LoginTestScreen() {
   const navigation = useNavigation();
   const [accessToken,setAccessToken] = useState();
   const [userInfo,setUserInfo] = useState();

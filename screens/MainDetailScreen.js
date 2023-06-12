@@ -17,41 +17,6 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-//type memberNcurrency = {
-//  members: [],
-
-//}
-
-
-/*
-async function fetchData() {
-  try {
-    const response = await fetch('http://172.30.1.16:5000/api/budget/trip/4/show', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        //'Authorization': `Bearer ${token}`,
-      },
-    });
-    console.log(response)
-    if (response.ok) {
-      const data = await response.json();
-      const members = data.member;
-      const exchangeRate = data.exchangeRate;
-      // Process the retrieved data
-      console.log(data);
-    } else {
-      // Handle error responses
-      const errorData = await response.json();
-      console.log('Error(response-not okay):', errorData);
-    }
-  } catch (error) {
-    // Handle network errors
-    console.log('Error(fetchdata error):', error);
-  }
-};
-*/
-
 
 export default function MainDetailScreen() {
   

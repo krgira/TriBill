@@ -13,6 +13,8 @@ import CurrencyScreen from './screens/CurrencyScreen';
 import AddInviteCodeScreen from './screens/AddInviteCodeScreen';
 import ChangeCurrencyButton from './components/ChangeCurrencyButton';
 import AlarmCurrencyButton from './components/AlarmCurrencyButton';
+import MainListScreen from './screens/MainListScreen';
+import ReportScreen from './screens/ReportScreen';
 
 const App = () => {
 

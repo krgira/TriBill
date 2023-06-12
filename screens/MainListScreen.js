@@ -61,7 +61,7 @@ function MainListScreen () {
         <View style = {styles.container}>
             <ScrollView style={styles.lists}>
                 {tripList && tripList.map(item => (
-                    <View key={item.id} style={{ borderRadius: 5, borderWidth: 1, margin: 5, borderColor: '#e0e0e0' }}>
+                    <View key={item.id} style={{ }}>
                         <List.Item
                         title={item.title}
                         description={item.nation.join(', ')}
@@ -71,9 +71,9 @@ function MainListScreen () {
                             </View>
                         )}
                         right={props => (
-                            <View>
-                                <MaterialIcons name="arrow-forward-ios" size={24} color="black" />
-                            </View>
+                          <View style={styles.rightArrow}>
+                            <MaterialIcons name="arrow-forward-ios" size={20} color="#8F9098" />
+                          </View>
                         )}
                         onPress={() => {
                           console.log(item.id); // Check if the navigation object is defined
@@ -95,6 +95,9 @@ const styles = StyleSheet.create({
     lists: {
         flex: 1,
     },
+    rightArrow:{
+      justifyContent: 'center',
+  },
 });
 
 export default MainListScreen;

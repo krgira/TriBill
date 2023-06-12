@@ -14,7 +14,6 @@ const MapScreen = () => {
   const GOOGLE_MAPS_API_KEY = 'AIzaSyD9zR2OmIdJG31qTIVjzMt54Fa64Tcy-Fs'; // Google Maps Geocoding API 키
   const COUNTRY_TRANSLATION_API_KEY = 'AIzaSyAb3_RJOHfh0awr5qu_tIHAoZKoc8K5x5A'; // 국가 이름 변환 API 키
 
-  const navigation = useNavigation();
   const [locations, setLocations] = useState([]);
   const [nationsFromServer, setNationFromServer] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
@@ -24,7 +23,7 @@ const MapScreen = () => {
   async function fetchData() {
     try {
       const jwtToken = await AsyncStorage.getItem('jwtToken');
-      console.log(jwtToken);
+      console.log('fetch data token: ' + jwtToken);
   
       const response = await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/report', {
         headers: {
@@ -113,6 +112,7 @@ const MapScreen = () => {
 
 
 const SelectedTravelList = ({ travelList }) => {
+  const navigation = useNavigation();
   return (
     <View>
       {travelList.map((item) => (

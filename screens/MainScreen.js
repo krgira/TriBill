@@ -20,9 +20,9 @@ import FloatingWriteButton from '../components/FloatingWriteButton';
 
 
 function MainScreen() {
-  const navigation = useNavigation();
-  const route = useRoute();
-  const {id} = route.params;
+  //const navigation = useNavigation();
+  //const route = useRoute();
+  //const {id} = route.params;
 
   const getFonts = async () => {
     await Font.loadAsync({
@@ -97,11 +97,12 @@ function MainScreen() {
     }
   };
 
-  const [member, setMember] = useState([]);
+  //const [member, setMember] = useState([]);
   const [accountList, setAccountList] = useState();
+  const member = ['dlt', 'asd'];    // 임시멤버 곧 삭제
 
   useEffect(() => {
-    fetchData();
+    //fetchData();
   }, []);
 
   const [selectedMember, setSelectedMember] = useState(member[0]);
@@ -150,9 +151,14 @@ function MainScreen() {
   const handleMemberPress = (item) => {
     setSelectedMember(item);
   };
+
   const renderMember = (item) => (
     <TouchableOpacity
-      style={{ paddingHorizontal: 10, alignItems: "center", justifyContent: "center"}}
+      style={{
+        paddingHorizontal: 10, 
+        alignItems: "center", 
+        justifyContent: "center",
+      }}
       onPress={() => handleMemberPress(item)}
       key={item}
     >
@@ -170,11 +176,13 @@ function MainScreen() {
       startAsync={getFonts}>
 
       <View style={styles.memberContainer}>
-        <ScrollView horizontal>
+        <ScrollView horizontal style={{borderWidth:1,}}>
           <View style={{flexDirection: "row"}}>
             {member && member.map(renderMember)}
           </View>
-          <TouchableOpacity 
+          
+        </ScrollView>
+        <TouchableOpacity 
             onPress={() => {
               navigation.navigate('ShowInviteCode', {id: id});
             }}
@@ -182,7 +190,6 @@ function MainScreen() {
             >
             <Ionicons name="add" size={30} color="#99B7DB" />
           </TouchableOpacity>
-        </ScrollView>
       </View>
 
       <View style={styles.calendar}>
@@ -246,30 +253,32 @@ const styles = StyleSheet.create({
     flex: 0.5,
     flexWrap: "wrap",
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "flex-start",
     paddingHorizontal: 10,
     paddingVertical: 10,
   },
   unselectedMem: {
     padding: 20,
-    borderRadius:50,
-    backgroundColor: "grey",
+    borderRadius: 15,
+    backgroundColor: "#EAF0F7",
   },
   selectedMem: {
     padding: 20,
-    borderRadius:50,
-    backgroundColor: "tomato",
+    borderRadius: 15,
+    backgroundColor: "#CBDAEC",
   },
   unselectedMemTXT: {
     paddingVertical: 5,
+    flexShrink: 1,
   },
   selectedMemTXT: {
     paddingVertical: 5,
     fontWeight: "bold",
+    flexShrink: 1,
   },
   addButton:{
-    paddingHorizontal: 5,
-    paddingBottom: 10,
+    //paddingHorizontal: 5,
+    //paddingBottom: 10,
   },
   addFriendbg: {
     backgroundColor: "#EAF0F7",
