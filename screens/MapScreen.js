@@ -120,7 +120,7 @@ const SelectedTravelList = ({ travelList, navigation }) => {
         <TouchableOpacity 
           key={item.id} 
           style={styles.travelItemContainer}
-          onPress={() => navigation.navigate('Report')}
+          onPress={() => navigation.navigate('Report', {id: item.id, title: item.title})}
         >
           <Text style={styles.travelItemTitle}>{item.title}</Text>
           <Text style={styles.travelItemDate}>{item.startDate} - {item.endDate}</Text>

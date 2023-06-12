@@ -22,7 +22,7 @@ const App = () => {
   return (
 
     <NavigationContainer>
-       <RootStack />
+       <MainTab />
     </NavigationContainer>
  
 

@@ -25,11 +25,6 @@ function MainScreen() {
   const {title} = route.params;
   const {id} = route.params;
 
-  const getFonts = async () => {
-    await Font.loadAsync({
-      Inter_SemiBold: require("../assets/fonts/Inter-SemiBold.ttf"),
-    });
-  };
 
   const fetchData = async () => {
     try {

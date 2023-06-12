@@ -16,8 +16,9 @@ import axios from "axios";
 const screenWidth = Dimensions.get("window").width;
 
 function ReportScreen() {
-    const tripTitle = "삼총사 요약";
-    const tripId = "7";
+    const route = useRoute();
+    const {title} = route.params;
+    const {id} = route.params;
 
     const [accommodation, setAccomodation] = useState(0);
     const [flight, setFlight] = useState(0);
@@ -133,7 +134,7 @@ function ReportScreen() {
           //console.log(jwtToken);
       
           const response = await axios.get(
-            `http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/report/travel/${tripId}/detail`,
+            `http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/report/travel/${id}/detail`,
             {
               headers: {
                 'Content-Type': 'application/json',
@@ -193,7 +194,7 @@ function ReportScreen() {
     return(
         <View style = {styles.container}>
             <View style={styles.title}>
-                <Text style={{fontWeight: 'bold',}}>{tripTitle}</Text>
+                <Text style={{fontWeight: 'bold',}}>{title}</Text>
             </View>
             <View style={styles.bunsuk}>
                 <Text style={{fontWeight: 'bold',}}>분석</Text>
