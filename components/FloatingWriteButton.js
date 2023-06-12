@@ -22,15 +22,15 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: "#4974A5",
         paddingHorizontal: 10,
-        paddingVertical: 18,
+        paddingVertical: 10,
         borderRadius: 10,
-        
+        width: '85%',
     },
     buttonText: {
         color: "white",
         fontWeight: "bold",
         textAlign: "center",
-        fontSize: 17,
+        fontSize: 13,
     }
 });
 

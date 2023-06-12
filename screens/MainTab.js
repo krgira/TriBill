@@ -7,13 +7,15 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import CurrencyScreen from './CurrencyScreen';
 import MapScreen from './MapScreen';
 import SettingScreen from './SettingScreen';
+import ReportScreen from './ReportScreen';
 
 import MainListScreen from './MainListScreen';
 import MainScreen from './MainScreen';
 import MainDetailScreen from './MainDetailScreen';
 import ShowInviteCodeScreen from './ShowInviteCodeScreen';
+import AddInviteCodeScreen from './AddInviteCodeScreen';
 
-import AlarmCurrencyButton from '../components/AlarmCurrencyButton';
+
 
 // Create a Stack Navigator for the screens nested within the MainTab
 const MainStack = createStackNavigator();
@@ -34,6 +36,11 @@ const MainStackScreens = () => (
     <MainStack.Screen
       name="MainDetail"
       component={MainDetailScreen}
+      options={{ headerShown: false }}
+    />
+    <MainStack.Screen
+      name="AddInviteCode"
+      component={AddInviteCodeScreen}
       options={{ headerShown: false }}
     />
     <MainStack.Screen
@@ -93,11 +100,7 @@ function MainTab() {
           tabBarIcon: ({color, size}) => (
             <Ionicons name="ios-logo-usd" size={size} color={color} />
           ),
-          headerRight: () => (
-            <View style={styles.alarmButton}>
-              <AlarmCurrencyButton />
-            </View>
-          ),
+          headerShown: false
         }}
       />
       <Tab.Screen 
@@ -106,7 +109,8 @@ function MainTab() {
         options={{
           tabBarIcon: ({color, size}) => (
             <Ionicons name="ios-bar-chart-sharp" size={size} color={color} />
-          )
+          ),
+          headerShown: false
         }}
       />
       <Tab.Screen 

@@ -13,7 +13,7 @@ import "react-native-gesture-handler";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { CalendarList } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 
 import FloatingWriteButton from '../components/FloatingWriteButton';
 
@@ -22,6 +22,7 @@ import FloatingWriteButton from '../components/FloatingWriteButton';
 function MainScreen() {
   const navigation = useNavigation();
   const route = useRoute();
+  const {title} = route.params;
   const {id} = route.params;
 
   const getFonts = async () => {
@@ -185,9 +186,15 @@ function MainScreen() {
   }
 
   return(
-    <View 
-      style={styles.container}
-      startAsync={getFonts}>
+    <View style={styles.container}>
+
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <AntDesign name="left" size={24} color="#99B7DB" />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>{title}</Text>
+        <Text>  </Text>
+      </View>
 
       <View style={styles.memberContainer}>
         <View style={{flexDirection: "row"}}>
@@ -207,8 +214,9 @@ function MainScreen() {
 
       <View style={styles.calendar}>
         <CalendarList 
+          initialDate={startDate}
           pagingEnabled 
-          horizontal
+          horizontal={true}
           markedDates={start2end}
           textStyle={styles.selectedText}
           hideArrows={false}
@@ -218,7 +226,6 @@ function MainScreen() {
           onDayPress={handleDayPress}
         />
       </View>
-
 
       <ScrollView style={styles.lists}>
         {accountList && accountList.map(item => (
@@ -261,15 +268,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    justifyContent: 'center',
+    //justifyContent: 'center',
+  },
+  header:{
+    flex: 0.1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    //backgroundColor: 'pink',
+  },
+  headerText:{
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   memberContainer: {
-    flex: 0.5,
+    flex: 0.3,
     flexWrap: "wrap",
     flexDirection: "row",
     alignItems: "flex-start",
+    justifyContent: 'flex-start',
     paddingHorizontal: 10,
     paddingVertical: 10,
+    //backgroundColor: 'red',
   },
   unselectedMem: {
     padding: 20,
@@ -282,10 +304,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#CBDAEC",
   },
   unselectedMemTXT: {
+    fontSize: 12,
     paddingVertical: 5,
     flexShrink: 1,
   },
   selectedMemTXT: {
+    fontSize: 12,
     paddingVertical: 5,
     fontWeight: "bold",
     flexShrink: 1,
@@ -314,7 +338,8 @@ const styles = StyleSheet.create({
     flex: 1.5,
   },
   floatingbtn:{
-    flex: 0.5,
+    //flex: 0.5,
+    alignItems: 'center',
   },
 });
 

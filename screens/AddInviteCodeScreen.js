@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { 
     View, 
     Text, 
@@ -6,28 +6,61 @@ import {
     StyleSheet, 
     TouchableOpacity, 
 } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 function AddInviteCodeScreen() {
+  const [inviteCode, setInviteCode] = useState('');
+  console.log(inviteCode);
+
+  const invitePlz = async (inviteCode) => {
+    try {
+      const userName = await AsyncStorage.getItem('userInfo.name');
+      console.log(userName);
+
+      const response = await axios.post(`http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/invite/${inviteCode}/user?Name=${userName}`, {
+        // Add any additional data you want to send in the request body
+      }, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+    
+      const data = response.data;
+      console.log(data);
+    
+      console.log("fetch end");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
     const handleLaterButtonPress = () => {
-        navigation.navigate("MainTab");
+        //navigation.navigate("MainTab");
       };
     
       const handleAddButtonPress = () => {
-        navigation.navigate("MainTab");
+        invitePlz(inviteCode);
+        //navigation.navigate("MainTab");
       };
+
 
     return (
         <View style={styles.container}>
             <Text style={styles.text}>이미 여행을 만드셨나요?</Text>
             <TextInput 
-                style={styles.invitecode}
-                placeholder="초대코드 입력"></TextInput>
+              style={styles.invitecode}
+              placeholder="초대코드 입력"
+              onChangeText={setInviteCode}
+              value={inviteCode}
+            />
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.laterButton} onPress={handleLaterButtonPress}>
                     <Text style={styles.laterButtonText}>나중에</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.addButton} onPress={handleAddButtonPress}>
-                    <Text style={styles.addButtonText}>설정하기</Text>
+                    <Text style={styles.addButtonText}>입력하기</Text>
                 </TouchableOpacity>
             </View>
         </View>

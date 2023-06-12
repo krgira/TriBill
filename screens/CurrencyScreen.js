@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, StyleSheet, Dimensions, } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, } from 'react-native';
 import { LineChart } from "react-native-chart-kit";
 import axios from 'axios';
 
@@ -80,7 +80,14 @@ function CurrencyScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text>   </Text>
+        <Text style={styles.headerText}>환율</Text>
+        <View style={styles.alarmButton}>
+          <AlarmCurrencyButton />
+        </View>
 
+      </View>
       <View style={styles.graph}>
         <LineChart
           data={data}
@@ -117,8 +124,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
+  header:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomColor: 'lightgrey',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  headerText:{
+    fontWeight: "bold",
+  },
   alarmButton: {
-    flex: 0.5,
+    paddingTop: 70,
   },
   graph: {
     flex: 1,
