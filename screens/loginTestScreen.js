@@ -1,5 +1,5 @@
 import {StatusBar} from 'expo-status-bar';
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import { Image, Text, View, StyleSheet,TouchableOpacity,PixelRatio } from 'react-native';

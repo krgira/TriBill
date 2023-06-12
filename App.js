@@ -26,13 +26,13 @@ const App = () => {
 
   return (
 
-    <NavigationContainer>
-       <RootStack />
+     <NavigationContainer>
+       <MainTab />
     </NavigationContainer>
  
 
     //<LoginTestScreen />
-   //<MapScreen />
+    //<MapScreen />
     //<SettingScreen/>
     //<ChangeCurrencyButton/>
     //<AlarmCurrencyButton/>
