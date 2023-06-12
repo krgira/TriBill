@@ -130,9 +130,7 @@ const styles = StyleSheet.create({
   headerIcon: {
     paddingHorizonal: 25,
   },
-  alarmButton: {
-    paddingTop: 80,
-  },
+ 
 });
 
 export default MainTab;

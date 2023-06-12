@@ -8,9 +8,28 @@ function TargetAmountScreen() {
   const [budget, setBudget] = React.useState('');
   const [showCurrency, setShowCurrency] = React.useState(false);
   const [buttonContainerStyle, setButtonContainerStyle] = React.useState(styles.buttonContainer);
+  const [tripId, setTripId] = React.useState();
   const navigation = useNavigation();
-  const tripId = AsyncStorage.getItem('tripId');
-  console.log(tripId);
+
+  // Retrieve the savedId value from AsyncStorage
+  AsyncStorage.getItem('tripId')
+  .then(tripIdString => {
+    if (tripIdString !== null) {
+      const tripId = parseInt(tripIdString, 10);
+
+      setTripId(tripId);
+      //console.log('Retrieved ID (schdule screen):', tripId);
+      // Use the savedId value as needed in the other screen
+    } else {
+      // Handle the case when savedId is not found in AsyncStorage
+    }
+  })
+  .catch(error => {
+    console.error('Error retrieving ID:', error);
+  });
+
+
+
 
   const handleTextInputFocus = () => {
     inputRef.current.focus();
@@ -27,12 +46,12 @@ function TargetAmountScreen() {
   };
 
   const handleLaterButtonPress = () => {
-    navigation.navigate("AddInviteCode");
+    navigation.navigate("MainTab");
   };
 
   const handleAddButtonPress = () => {
     setTarget(tripId);
-    navigation.navigate("AddInviteCode");
+    navigation.navigate("MainTab");
   };
 
   const inputRef = React.useRef(null);

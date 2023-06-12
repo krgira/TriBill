@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   alarmButton: {
-    paddingTop: 70,
+    paddingTop: 85,
   },
   graph: {
     flex: 1,

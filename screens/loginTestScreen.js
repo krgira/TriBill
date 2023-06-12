@@ -12,7 +12,7 @@ import MapScreen from './MapScreen';
 WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginTestScreen() {
-  //const navigation = useNavigation();
+  const navigation = useNavigation();
   const [accessToken,setAccessToken] = useState();
   const [userInfo,setUserInfo] = useState();
   const [message,setMessage] = useState();
@@ -78,7 +78,7 @@ export default function LoginTestScreen() {
         getUserData();
         console.log('final post success');
         
-        //navigation.navigate('SetNation');
+        navigation.navigate('SetNation');
     }
     else{
         console.log('final post failed');      

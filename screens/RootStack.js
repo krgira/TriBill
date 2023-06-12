@@ -26,17 +26,12 @@ function RootStack() {
       <Stack.Screen
         name="SetSchedule"
         component={SetScheduleScreen}
-        //options={{headerShown: false}}  // 헤더 중첩을 막기 위함
+        options={{headerShown: false}}  // 헤더 중첩을 막기 위함
       />
       <Stack.Screen
         name="TargetAmount"
         component={TargetAmountScreen}
-        //options={{headerShown: false}}  // 헤더 중첩을 막기 위함
-      />
-      <Stack.Screen
-        name="AddInviteCode"
-        component={AddInviteCodeScreen}
-        //options={{headerShown: false}}  // 헤더 중첩을 막기 위함
+        options={{headerShown: false}}  // 헤더 중첩을 막기 위함
       />
       <Stack.Screen
         name="MainTab"

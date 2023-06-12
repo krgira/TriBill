@@ -26,23 +26,23 @@ function SetScheduleScreen() {
 
   //console.log('start: ', selectedStartDate);
   //console.log('End: ', selectedEndDate);
-  useEffect(()=>{
-    const getTripData = async()=>{
-        try{
-          // AsyncStorage에서 inputData에 저장된 값 가져오기
-            const tripId = await AsyncStorage.getItem("tripId")
-            setTripId(tripId);
-            // value에 값이 있으면 콘솔에 찍어줘
-            if(value!== null){
-                console.log(tripId)
-            }
-        }catch(error){
-            console.log(error)
-        }
-    };
-    // 함수 실행
-    getTripData();
-  },[])
+  // Retrieve the savedId value from AsyncStorage
+  AsyncStorage.getItem('tripId')
+  .then(tripIdString => {
+    if (tripIdString !== null) {
+      const tripId = parseInt(tripIdString, 10);
+
+      setTripId(tripId);
+      //console.log('Retrieved ID (schdule screen):', tripId);
+      // Use the savedId value as needed in the other screen
+    } else {
+      // Handle the case when savedId is not found in AsyncStorage
+    }
+  })
+  .catch(error => {
+    console.error('Error retrieving ID:', error);
+  });
+
   // Function to handle date selection
   const handleDayPress = (day) => {
     if (selectedStartDate === null) {
