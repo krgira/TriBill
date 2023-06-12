@@ -6,7 +6,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 import CurrencyScreen from './CurrencyScreen';
 import MapScreen from './MapScreen';
-import ReportScreen from './ReportScreen';
 import SettingScreen from './SettingScreen';
 
 import MainListScreen from './MainListScreen';
@@ -64,6 +63,7 @@ const MapStackScreens = () => (
   </MapStack.Navigator>
 );
 
+
 const Tab = createBottomTabNavigator();
 
 function MainTab() {
@@ -83,6 +83,7 @@ function MainTab() {
           tabBarIcon: ({color, size}) => (
             <Ionicons name="calendar-sharp" size={size} color={color} />
           ),
+          headerShown: false
         }}
       />
       <Tab.Screen 
@@ -100,7 +101,7 @@ function MainTab() {
         }}
       />
       <Tab.Screen 
-        name='Map' 
+        name='MapStack' 
         component={MapStackScreens} 
         options={{
           tabBarIcon: ({color, size}) => (

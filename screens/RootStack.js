@@ -7,8 +7,6 @@ import TargetAmountScreen from './TargetAmountScreen';
 import AddInviteCodeScreen from './AddInviteCodeScreen';
 import MainTab from './MainTab';
 import LoginTestScreen from './LoginTestScreen';
-import MainUpdateScreen from './MainUpdateScreen';
-import ReportScreen from './ReportScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,11 +41,6 @@ function RootStack() {
       <Stack.Screen
         name="MainTab"
         component={MainTab}
-        options={{headerShown: false}}  // 헤더 중첩을 막기 위함
-      />
-      <Stack.Screen
-        name="Report"
-        component={ReportScreen}
         options={{headerShown: false}}  // 헤더 중첩을 막기 위함
       />
     </Stack.Navigator>

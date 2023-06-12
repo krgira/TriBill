@@ -15,13 +15,14 @@ import ChangeCurrencyButton from './components/ChangeCurrencyButton';
 import AlarmCurrencyButton from './components/AlarmCurrencyButton';
 import MainListScreen from './screens/MainListScreen';
 import ReportScreen from './screens/ReportScreen';
+import ShowInviteCodeScreen from './screens/ShowInviteCodeScreen';
 
 const App = () => {
 
   return (
 
     <NavigationContainer>
-       <MapScreen />
+       <MainTab />
     </NavigationContainer>
  
 

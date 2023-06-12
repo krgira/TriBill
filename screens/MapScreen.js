@@ -4,10 +4,11 @@ import MapView from 'react-native-maps';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, } from '@react-navigation/native';
+
 import Swiper from 'react-native-swiper';
 
-const MapScreen = () => {
+const MapScreen = ({ navigation }) => {
   const KOREA_LATITUDE = 37.5665; // 대한민국 위도
   const KOREA_LONGITUDE = 126.9780; // 대한민국 경도
   const ZOOM_LEVEL = 70; // 확대 정도 조절
@@ -111,17 +112,16 @@ const MapScreen = () => {
 
 
 
-const SelectedTravelList = ({ travelList }) => {
-  const navigation = useNavigation();
+const SelectedTravelList = ({ travelList, navigation }) => {
+  //const navigation = useNavigation();
   return (
     <View>
       {travelList.map((item) => (
         <TouchableOpacity 
           key={item.id} 
           style={styles.travelItemContainer}
-          onPress={() => {
-            navigation.navigate('Report');
-          }}>
+          onPress={() => navigation.navigate('Report')}
+        >
           <Text style={styles.travelItemTitle}>{item.title}</Text>
           <Text style={styles.travelItemDate}>{item.startDate} - {item.endDate}</Text>
         </TouchableOpacity>
@@ -159,7 +159,7 @@ const SelectedTravelList = ({ travelList }) => {
       {selectedCountry && (
       <View style={styles.travelListContainer}>
         <Text style={styles.travelListTitle}>Travel List</Text>
-        <SelectedTravelList travelList={selectedTravelList} />
+        <SelectedTravelList travelList={selectedTravelList} navigation={ navigation }/>
       </View>
     )}
     </View>

@@ -20,9 +20,9 @@ import FloatingWriteButton from '../components/FloatingWriteButton';
 
 
 function MainScreen() {
-  //const navigation = useNavigation();
-  //const route = useRoute();
-  //const {id} = route.params;
+  const navigation = useNavigation();
+  const route = useRoute();
+  const {id} = route.params;
 
   const getFonts = async () => {
     await Font.loadAsync({
@@ -97,20 +97,23 @@ function MainScreen() {
     }
   };
 
-  //const [member, setMember] = useState([]);
+  const [member, setMember] = useState([]);
   const [accountList, setAccountList] = useState();
-  const member = ['dlt', 'asd'];    // 임시멤버 곧 삭제
+  //const member = ['dlt', 'asd'];    // 임시멤버 곧 삭제
 
   useEffect(() => {
-    //fetchData();
+    fetchData();
   }, []);
 
   const [selectedMember, setSelectedMember] = useState(member[0]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
 
-  const selectedDates = {};
+  //const startDate = '2023-06-12'; // 임시 시작일
+  //const endDate = '2023-06-18'; // 임시 종료일
+  const start2end = {};
 
   if (startDate && endDate) {
     const currentDate = new Date(startDate);
@@ -118,7 +121,11 @@ function MainScreen() {
 
     while (currentDate <= lastDate) {
       const dateString = currentDate.toISOString().split('T')[0];
-      selectedDates[dateString] = { selected: true, selectedColor: '#CBDAEC', selectedTextColor: 'black' };
+      if (dateString === selectedDate) {
+        start2end[dateString] = { selected: true, selectedColor: '#4974A5', selectedTextColor: 'white' };
+      } else {
+        start2end[dateString] = { selected: true, selectedColor: '#CBDAEC', selectedTextColor: 'black' };
+      }
       currentDate.setDate(currentDate.getDate() + 1);
     }
   }
@@ -170,19 +177,24 @@ function MainScreen() {
     </TouchableOpacity>
   );
 
+  const handleDayPress = (date) => {
+    const d = date.dateString;
+    setSelectedDate(d);
+
+    //console.log(date);
+  }
+
   return(
     <View 
       style={styles.container}
       startAsync={getFonts}>
 
       <View style={styles.memberContainer}>
-        <ScrollView horizontal style={{borderWidth:1,}}>
-          <View style={{flexDirection: "row"}}>
+        <View style={{flexDirection: "row"}}>
             {member && member.map(renderMember)}
-          </View>
-          
-        </ScrollView>
-        <TouchableOpacity 
+        </View>
+        <View style={{paddingHorizontal:10}}>
+         <TouchableOpacity 
             onPress={() => {
               navigation.navigate('ShowInviteCode', {id: id});
             }}
@@ -190,18 +202,20 @@ function MainScreen() {
             >
             <Ionicons name="add" size={30} color="#99B7DB" />
           </TouchableOpacity>
+          </View>
       </View>
 
       <View style={styles.calendar}>
         <CalendarList 
           pagingEnabled 
           horizontal
-          markedDates={selectedDates}
+          markedDates={start2end}
           textStyle={styles.selectedText}
           hideArrows={false}
           theme={{
             todayTextColor: '#6D8FB7',
           }}
+          onDayPress={handleDayPress}
         />
       </View>
 
@@ -287,7 +301,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   calendar: {
-    flex: 2,
+    flex: 1.5,
+    borderBottomColor: 'lightgrey',
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   selectedText: {
     color: 'black',
@@ -295,7 +311,7 @@ const styles = StyleSheet.create({
     // Add any additional styles for the selected dates' text if needed
   },
   lists: {
-    flex: 1,
+    flex: 1.5,
   },
   floatingbtn:{
     flex: 0.5,
