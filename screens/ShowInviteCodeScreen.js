@@ -4,7 +4,6 @@ import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 
 function ShowInviteCodeScreen() {
-    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NjQwODk2OSwiZW1haWwiOiJ0ZXN0ZXIyMzMzM0BuYXZlci5jb20ifQ.vXH-HK0g4okvL7YbeDqXx354wLdnp5TKahqPYLbDuyStOLDM3SxPXVCQqja9h4_nP3NpzpNqAQBu_c3k8UpK0w';
     const [inviteCode, setInviteCode] = useState('');
     const route = useRoute();
     const {id} = route.params;
@@ -14,25 +13,19 @@ function ShowInviteCodeScreen() {
           const response = await axios.post(
             `http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/invite/trip/${id}`,
             { id },
-            {
-              headers: {
+            {headers: {
                 'Content-Type': 'application/json',
               },
             }
           );
-      
           //console.log(response.data);
           setInviteCode(response.data.inviteCode)
-
-
         } catch (error) {
           console.error(error);
         }
-      
-        console.log('fetch end');
+        console.log('ShowInvite fetch end');
       };
     
-
       useEffect(() => {
         postTripId();
       }, []);

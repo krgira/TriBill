@@ -63,11 +63,6 @@ function MainTab() {
           tabBarIcon: ({color, size}) => (
             <Ionicons name="calendar-sharp" size={size} color={color} />
           ),
-          headerRight: () => (
-            <TouchableOpacity style={styles.headerIcon}>
-              <Text>Edit</Text>
-            </TouchableOpacity>
-          ),
         }}
       />
       <Tab.Screen 

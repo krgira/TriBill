@@ -8,8 +8,9 @@ function TargetAmountScreen() {
   const [budget, setBudget] = React.useState('');
   const [showCurrency, setShowCurrency] = React.useState(false);
   const [buttonContainerStyle, setButtonContainerStyle] = React.useState(styles.buttonContainer);
-  const [tripId, setTripId] = React.useState();
   const navigation = useNavigation();
+  const tripId = AsyncStorage.getItem('tripId');
+  console.log(tripId);
 
   const handleTextInputFocus = () => {
     inputRef.current.focus();
@@ -36,23 +37,6 @@ function TargetAmountScreen() {
 
   const inputRef = React.useRef(null);
   const amount = parseFloat(budget);
-
-
-  AsyncStorage.getItem('tripId')
-  .then(tripIdString => {
-    if (tripIdString !== null) {
-      const tripId = parseInt(tripIdString, 10);
-      console.log('Retrieved ID (amount):', tripId);
-
-      setTripId(tripId); // Call setTarget() with the tripId value
-    } else {
-      // Handle the case when tripId is not found in AsyncStorage
-      console.log('Trip ID not found in AsyncStorage');
-    }
-  })
-  .catch(error => {
-    console.error('Error retrieving trip ID:', error);
-  });
 
 const setTarget = (tripId) => {
   axios.post(`http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/trip/${tripId}/create/amount`, {
@@ -109,6 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingTop: 300,
+    backgroundColor: 'white',
   },
   fieldContainer: {
     top: 100,

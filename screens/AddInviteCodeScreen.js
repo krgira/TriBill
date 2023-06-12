@@ -8,6 +8,14 @@ import {
 } from 'react-native';
 
 function AddInviteCodeScreen() {
+    const handleLaterButtonPress = () => {
+        navigation.navigate("MainTab");
+      };
+    
+      const handleAddButtonPress = () => {
+        navigation.navigate("MainTab");
+      };
+
     return (
         <View style={styles.container}>
             <Text style={styles.text}>이미 여행을 만드셨나요?</Text>
@@ -15,10 +23,10 @@ function AddInviteCodeScreen() {
                 style={styles.invitecode}
                 placeholder="초대코드 입력"></TextInput>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.laterButton}>
+                <TouchableOpacity style={styles.laterButton} onPress={handleLaterButtonPress}>
                     <Text style={styles.laterButtonText}>나중에</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.addButton}>
+                <TouchableOpacity style={styles.addButton} onPress={handleAddButtonPress}>
                     <Text style={styles.addButtonText}>설정하기</Text>
                 </TouchableOpacity>
             </View>

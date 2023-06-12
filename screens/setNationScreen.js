@@ -114,7 +114,7 @@ const SetNationScreen = () => {
     { currencyType: "GNF", id: 2, name: "기니", emoji: "🇬🇳" },
     { currencyType: "GMD", id: 3, name: "감비아", emoji: "🇬🇲" },
     { currencyType: "GYD", id: 4, name: "가이아나", emoji: "🇬🇾" },
-    { currencyType: "GGP", id: 5, name: "건지 섬", emoji: "🇬🇬" },
+    { currencyType: "GGP", id: 5, name: "건지", emoji: "🇬🇬" },
     { currencyType: "GRC", id: 7, name: "그리스", emoji: "🇬🇷" },
     { currencyType: "GTQ", id: 8, name: "과테말라", emoji: "🇬🇹" },
     { currencyType: "ANG", id: 9, name: "네덜란드령 안틸레스", emoji: "🇳🇱" },
@@ -284,6 +284,7 @@ const SetNationScreen = () => {
     { id: 174, currencyType: "HUF", name: "헝가리", emoji: "🇭🇺" },
     { id: 175, currencyType: "HKD", name: "홍콩", emoji: "🇭🇰" }
   ];
+
   const navigation = useNavigation();
   const toggleFavorite = (id) => {
     setFavoriteCountries((prevFavorites) => {

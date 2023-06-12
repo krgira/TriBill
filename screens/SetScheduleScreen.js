@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { CalendarList } from 'react-native-calendars';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { eachDayOfInterval, format } from 'date-fns';
@@ -20,13 +20,29 @@ const isSameDay = (date1, date2) => {
 
 function SetScheduleScreen() {
   const navigation = useNavigation();
-  const [tripId, setTripId] = useState();
   const [selectedStartDate, setSelectedStartDate] = useState();
   const [selectedEndDate, setSelectedEndDate] = useState();
+  const [tripId, setTripId] = useState();
 
-  console.log('start: ', selectedStartDate);
-  console.log('End: ', selectedEndDate);
-
+  //console.log('start: ', selectedStartDate);
+  //console.log('End: ', selectedEndDate);
+  useEffect(()=>{
+    const getTripData = async()=>{
+        try{
+          // AsyncStorage에서 inputData에 저장된 값 가져오기
+            const tripId = await AsyncStorage.getItem("tripId")
+            setTripId(tripId);
+            // value에 값이 있으면 콘솔에 찍어줘
+            if(value!== null){
+                console.log(tripId)
+            }
+        }catch(error){
+            console.log(error)
+        }
+    };
+    // 함수 실행
+    getTripData();
+  },[])
   // Function to handle date selection
   const handleDayPress = (day) => {
     if (selectedStartDate === null) {
@@ -48,46 +64,30 @@ function SetScheduleScreen() {
     }
   };
 
-const renderFilledDates = () => {
-  const markedDates = {};
+  const renderFilledDates = () => {
+    const markedDates = {};
 
-  if (selectedStartDate && selectedEndDate) {
-    const startDate = new Date(selectedStartDate);
-    const endDate = new Date(selectedEndDate);
-    const days = eachDayOfInterval({ start: startDate, end: endDate });
+    if (selectedStartDate && selectedEndDate) {
+      const startDate = new Date(selectedStartDate);
+      const endDate = new Date(selectedEndDate);
+      const days = eachDayOfInterval({ start: startDate, end: endDate });
 
-    days.forEach((day, index) => {
-      const dateString = format(day, 'yyyy-MM-dd');
+      days.forEach((day, index) => {
+        const dateString = format(day, 'yyyy-MM-dd');
 
-      if (index === 0) {
-        markedDates[dateString] = { selected: true };
-      } else if (index === days.length - 1) {
-        markedDates[dateString] = { selected: true };
-      } else {
-        markedDates[dateString] = { selected: true };
-      }
-    });
-  }
-
-  return markedDates;
-};
-
-  // Retrieve the savedId value from AsyncStorage
-  AsyncStorage.getItem('tripId')
-  .then(tripIdString => {
-    if (tripIdString !== null) {
-      const tripId = parseInt(tripIdString, 10);
-
-      setTripId(tripId);
-      //console.log('Retrieved ID (schdule screen):', tripId);
-      // Use the savedId value as needed in the other screen
-    } else {
-      // Handle the case when savedId is not found in AsyncStorage
+        if (index === 0) {
+          markedDates[dateString] = { selected: true };
+        } else if (index === days.length - 1) {
+          markedDates[dateString] = { selected: true };
+        } else {
+          markedDates[dateString] = { selected: true };
+        }
+      });
     }
-  })
-  .catch(error => {
-    console.error('Error retrieving ID:', error);
-  });
+
+    return markedDates;
+  };
+
 
   const setSchedule = (tripId) => {
     fetch(`http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/trip/${tripId}/create/date`, {

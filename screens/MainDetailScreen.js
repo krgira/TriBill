@@ -14,6 +14,7 @@ import Constants from 'expo-constants';
 import SelectDropdown from 'react-native-select-dropdown'
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 //type memberNcurrency = {
@@ -53,14 +54,16 @@ async function fetchData() {
 
 
 export default function MainDetailScreen() {
-  const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY4NjQwNzA3NywiZW1haWwiOiJ0ZXN0ZXIyMzMzM0BuYXZlci5jb20ifQ.Lj1b2HrP_foeLvoXet_X6ds3Yy4K-8mRSLMEWoB4qeGyALaB8q-a9BzQcB3a2Nqu5fKzxipxL-O2E0ByQVv_ww";
-
+  
   const fetchData = async () => {
     try {
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      console.log(jwtToken);
+
       const response = await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/budget/trip/1/show', {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${jwtToken}`,
         },
       });
   

@@ -1,19 +1,22 @@
 import {StatusBar} from 'expo-status-bar';
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-import { Button, Image, Text, View, StyleSheet,TouchableOpacity,PixelRatio } from 'react-native';
+import { Image, Text, View, StyleSheet,TouchableOpacity,PixelRatio } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+
 import MapScreen from './MapScreen';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function App() {
-  const [accessToken,setAccessToken] = React.useState();
-  const [userInfo,setUserInfo] = React.useState();
-  const [message,setMessage] = React.useState();
-  const [jwtToken, setJwtToken] = React.useState();
+  const navigation = useNavigation();
+  const [accessToken,setAccessToken] = useState();
+  const [userInfo,setUserInfo] = useState();
+  const [message,setMessage] = useState();
+  const [jwtToken, setJwtToken] = useState();
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: '338399356732-aj4999ugrtv7ktrfnlt8mff0ki9ruh5m.apps.googleusercontent.com',
@@ -25,40 +28,57 @@ export default function App() {
   async function sendUserDataToServer(accessToken, userInfo) {
     try {
       const headers = {
-        Authorization: `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
       };
-
+  
       const dataToSend = {
         nickname: userInfo.name,
         email: userInfo.email,
-        password: 1111
+        password: 1111,
       };
   
-      const response = await axios.post('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/sign-up', dataToSend);
+      const response = await axios.post(
+        'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/sign-up',
+        dataToSend,
+        { headers }
+      );
   
       const jwtToken = response.data.token;
       await AsyncStorage.multiSet([
         ['jwtToken', jwtToken],
         ['userInfo.name', userInfo.name],
-        ['userInfo.email', userInfo.email]
+        ['userInfo.email', userInfo.email],
       ]);
+  
       console.log(userInfo.name, userInfo.email);
-      // 서버로부터의 응답 처리
-      console.log('sendUserDataToServerSuccess',accessToken,dataToSend);
+      console.log('sendUserDataToServerSuccess', accessToken, dataToSend);
       console.log(jwtToken);
+  
       setJwtToken(jwtToken);
     } catch (error) {
-      // 오류 처리
-      console.error(error);
+      if (error.response) {
+        // The request was made and the server responded with a status code outside the range of 2xx
+        console.error('Error response:', error.response.data);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an error
+        console.error('Error:', error.message);
+      }
     }
   }
+  
 
   React.useEffect(() => {
     setMessage(JSON.stringify(response));
     if (response?.type === 'success') {
         setAccessToken(response.authentication.accessToken);
         sendUserDataToServer(accessToken, userInfo); // 서버로 데이터 전송
-        console.log('final post success');      
+        getUserData();
+        console.log('final post success');
+        
+        navigation.navigate('SetNation');
     }
     else{
         console.log('final post failed');      
@@ -72,10 +92,9 @@ export default function App() {
       const response = await axios.get("https://www.googleapis.com/userinfo/v2/me", {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
-  
       const data = response.data;
-      setUserInfo(data);} 
-      
+      setUserInfo(data);
+    } 
       catch (error) {
       console.error(error);
     }
@@ -89,8 +108,10 @@ export default function App() {
     <View style={styles.mentContainer}>
       <Text style={styles.ment}>⚡3초만에 시작하기</Text>
     </View>
-    <TouchableOpacity style={styles.googleButton} onPress={accessToken ? getUserData : () => promptAsync({ showInRecents: true })}>
-  <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
+    <TouchableOpacity 
+      style={styles.googleButton} 
+      onPress={accessToken ? getUserData : () => promptAsync({ showInRecents: true })}>
+      <Image source={require('../assets/pressed.png')} style={{ width: '100%', height: '100%' }} />
     </TouchableOpacity>
     <StatusBar />
     {jwtToken && <MapScreen jwtToken={jwtToken} />} 

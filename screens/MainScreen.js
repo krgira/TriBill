@@ -23,23 +23,22 @@ function MainScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const {id} = route.params;
-  const [token, setToken] = useState('');
-  
-  const checkAsyncStorage = async () => {
-    try {
-      const jwtToken = await AsyncStorage.getItem('jwtToken');
-      setToken(jwtToken || '');
-    } catch (error) {
-      console.log('Error retrieving data from AsyncStorage:', error);
-    }
+
+  const getFonts = async () => {
+    await Font.loadAsync({
+      Inter_SemiBold: require("../assets/fonts/Inter-SemiBold.ttf"),
+    });
   };
 
   const fetchData = async () => {
     try {
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      console.log(jwtToken);
+
       const response = await axios.get(`http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/budget/trip/${id}/details?userName=이승재/학생/컴퓨터공학`, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${jwtToken}`,
         },
       });
   
@@ -102,7 +101,6 @@ function MainScreen() {
   const [accountList, setAccountList] = useState();
 
   useEffect(() => {
-    checkAsyncStorage();
     fetchData();
   }, []);
 
@@ -119,7 +117,7 @@ function MainScreen() {
 
     while (currentDate <= lastDate) {
       const dateString = currentDate.toISOString().split('T')[0];
-      selectedDates[dateString] = { selected: true, selectedColor: '#CBDAEC', textColor: 'black' };
+      selectedDates[dateString] = { selected: true, selectedColor: '#CBDAEC', selectedTextColor: 'black' };
       currentDate.setDate(currentDate.getDate() + 1);
     }
   }
@@ -167,30 +165,36 @@ function MainScreen() {
   );
 
   return(
-    <View style={styles.container}>
+    <View 
+      style={styles.container}
+      startAsync={getFonts}>
 
       <View style={styles.memberContainer}>
-      <ScrollView horizontal>
-        <View style={{flexDirection: "row"}}>
-          {member && member.map(renderMember)}
-        </View>
-        <TouchableOpacity 
-          onPress={() => {
-            navigation.navigate('ShowInviteCode', {id: id});
-          }}>
-          <Ionicons style={styles.addButton} name="add-circle-outline" size={50} color="black" />
-          <Text>   </Text>
-        </TouchableOpacity>
-      </ScrollView>
+        <ScrollView horizontal>
+          <View style={{flexDirection: "row"}}>
+            {member && member.map(renderMember)}
+          </View>
+          <TouchableOpacity 
+            onPress={() => {
+              navigation.navigate('ShowInviteCode', {id: id});
+            }}
+            style={styles.addFriendbg}
+            >
+            <Ionicons name="add" size={30} color="#99B7DB" />
+          </TouchableOpacity>
+        </ScrollView>
       </View>
 
       <View style={styles.calendar}>
         <CalendarList 
-            pagingEnabled 
-            horizontal
-            markedDates={selectedDates}
-            markingColor="#CBDAEC"
-            textStyle={styles.selectedText}
+          pagingEnabled 
+          horizontal
+          markedDates={selectedDates}
+          textStyle={styles.selectedText}
+          hideArrows={false}
+          theme={{
+            todayTextColor: '#6D8FB7',
+          }}
         />
       </View>
 
@@ -224,7 +228,7 @@ function MainScreen() {
         ))}
       </ScrollView>
 
-      <View>
+      <View style={styles.floatingbtn}>
         <FloatingWriteButton />
       </View>
       
@@ -267,16 +271,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingBottom: 10,
   },
+  addFriendbg: {
+    backgroundColor: "#EAF0F7",
+    paddingHorizontal: 5,
+    paddingVertical: 5,
+    borderRadius: 15,
+  },
   calendar: {
     flex: 2,
   },
   selectedText: {
     color: 'black',
+    fontFamily: 'Inter_SemiBold',
     // Add any additional styles for the selected dates' text if needed
   },
   lists: {
     flex: 1,
-  }
+  },
+  floatingbtn:{
+    flex: 0.5,
+  },
 });
 
 export default MainScreen;

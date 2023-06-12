@@ -11,34 +11,27 @@ function MainListScreen () {
   const navigation = useNavigation();
   const route = useRoute();
   const [tripList, setTripList] = useState([]);
-  const [token, setToken] = useState('');
-  console.log(token);
 
-  const checkAsyncStorage = async () => {
+  const fetchData = async () => {
     try {
       const jwtToken = await AsyncStorage.getItem('jwtToken');
-      setToken(jwtToken);
-    } catch (error) {
-      console.log('Error retrieving data from AsyncStorage:', error);
-    }
-  };
-
-  const fetchData = async (token) => {
-    try {
-      const response = await axios.get('http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/trip/user/TravelList', {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      console.log(jwtToken);
+  
+      const response = await axios.get(
+        'http://ec2-54-180-86-234.ap-northeast-2.compute.amazonaws.com:8001/api/trip/user/TravelList',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
   
       console.log(response);
   
       if (response.status === 200) {
-        const data = response.data;
-        console.log(data); // Log the received data
-  
-        const tripLists = data;
+        const tripLists = response.data;
+        console.log(tripLists); // Log the received data
   
         // Update tripList state variable with the retrieved data
         setTripList(tripLists);
@@ -58,10 +51,10 @@ function MainListScreen () {
       }
     }
   };
+  
 
   useEffect(() => {
-    checkAsyncStorage();
-    fetchData(token);
+    fetchData();
   }, []);
 
     return (
@@ -97,6 +90,7 @@ function MainListScreen () {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: 'white',
     },
     lists: {
         flex: 1,
